@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  * {
+    font-family: 'Sora', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', sans-serif;
+  }
+
+  a,
+  button,
+  [role="button"] {
+    cursor: none;
+  }
+}
+
+.CodeMirror {
+    height: 100%;
+    min-height: 100%;
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.editor-wrapper {
+  border: 1px solid rgba(248, 250, 252, 0.06);
+  border-radius: 6px;
+  transition: border-color 400ms ease, box-shadow 400ms ease;
+}
+
+.editor-wrapper:focus-within {
+  border-color: rgba(245, 158, 11, 0.25);
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.1), inset 0 0 30px rgba(245, 158, 11, 0.02);
+}
+
+.cm-scroller::-webkit-scrollbar,
+.CodeMirror-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.cm-scroller::-webkit-scrollbar-track,
+.CodeMirror-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb,
+.CodeMirror-scroll::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.3);
+  border-radius: 2px;
+}
+
+.cm-scroller::-webkit-scrollbar-thumb:hover,
+.CodeMirror-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.5);
+}
+
+.forkspace-editor-driver,
+.forkspace-editor-mentor,
+.forkspace-editor-candidate,
+.forkspace-editor-shared,
+.forkspace-editor-navigator,
+.forkspace-editor-locked {
+  transition: box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.forkspace-editor-driver {
+  box-shadow: inset 3px 0 0 rgba(59, 130, 246, 0.9);
+}
+
+.forkspace-editor-driver .CodeMirror-cursor {
+  border-left-color: #3b82f6 !important;
+}
+
+.forkspace-editor-mentor {
+  box-shadow: inset 3px 0 0 rgba(16, 185, 129, 0.9);
+}
+
+.forkspace-editor-mentor .CodeMirror-cursor,
+.forkspace-editor-candidate .CodeMirror-cursor,
+.forkspace-editor-shared .CodeMirror-cursor {
+  border-left-color: #10b981 !important;
+}
+
+.forkspace-editor-candidate {
+  box-shadow: inset 3px 0 0 rgba(245, 158, 11, 0.9);
+}
+
+.forkspace-editor-candidate .CodeMirror-cursor {
+  border-left-color: #f59e0b !important;
+}
+
+.forkspace-editor-shared {
+  box-shadow: inset 3px 0 0 rgba(20, 184, 166, 0.9);
+}
+
+.forkspace-editor-locked,
+.forkspace-editor-navigator {
+  box-shadow: inset 3px 0 0 rgba(244, 63, 94, 0.85);
+}
+
+.forkspace-editor-locked .CodeMirror-lines,
+.forkspace-editor-navigator .CodeMirror-lines {
+  opacity: 0.96;
+}
+
+.panel-resize {
+  overflow: auto;
+  resize: horizontal;
+  flex: 0 0 auto;
+  min-width: 280px;
+  max-width: 48vw;
+}
+
+.panel-resize-left {
+  min-width: 320px;
+  max-width: 42vw;
+}
+
+.remote-cursor-widget {
+  position: relative;
+  margin-left: -1px;
+  height: 1.2em;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.remote-cursor-label {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font-size: 10px;
+  line-height: 1.1;
+  font-weight: 600;
+  color: #0f172a;
+  padding: 1px 5px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.workspace-blink-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: workspaceBlink 1s steps(2, start) infinite;
+}
+
+.workspace-output-success {
+  position: relative;
+  overflow: hidden;
+}
+
+.workspace-output-success::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.18) 45%, transparent 100%);
+  transform: translateX(-100%);
+  animation: workspaceSuccessSweep 300ms ease-out forwards;
+  pointer-events: none;
+}
+
+.workspace-output-wa {
+  animation: workspaceErrorPulse 500ms ease-out;
+}
+
+.workspace-output-tle {
+  animation: workspaceTlePulse 500ms ease-out;
+}
+
+@keyframes workspaceBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes workspaceSuccessSweep {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes workspaceErrorPulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  20% { box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.9); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes workspaceTlePulse {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  20% { box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.9); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+@keyframes sampleReveal {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes samplePassFlash {
+  0% { background: rgba(16, 185, 129, 0.13); }
+  100% { background: transparent; }
+}
+
+@keyframes sampleFailFlash {
+  0% { background: rgba(239, 68, 68, 0.13); }
+  100% { background: transparent; }
+}
+
+.workspace-run-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.workspace-run-button[data-run-state="compiling"] {
+  animation: buttonPulse 600ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+.workspace-run-button[data-run-state="success"] {
+  animation: buttonSuccess 600ms ease;
+}
+
+.workspace-run-button[data-run-state="error"],
+.workspace-run-button[data-run-state="tle"] {
+  animation: buttonError 600ms ease;
+}
+
+.workspace-run-button[data-run-state="idle"]:hover {
+  transform: scale(1.02);
+}
+
+.workspace-run-button-icon {
+  transition: transform 200ms ease;
+}
+
+.workspace-run-button[data-run-state="idle"]:hover .workspace-run-button-icon {
+  transform: rotate(5deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

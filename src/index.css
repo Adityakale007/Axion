@@ -1,0 +1,124 @@
+@import './App.css';
+
+/* Cursor override */
+* {
+  cursor: none !important;
+}
+
+@media (hover: none) {
+  * {
+    cursor: auto !important;
+  }
+}
+
+/* Custom scrollbar global */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(245, 158, 11, 0.25);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(245, 158, 11, 0.4);
+}
+
+/* Selection highlight */
+::selection {
+  background: rgba(245, 158, 11, 0.25);
+  color: #f8fafc;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base transition for interactive elements */
+button,
+a,
+[role="button"] {
+  transition: opacity 150ms ease, transform 150ms ease, box-shadow 200ms ease;
+}
+
+.word-reveal {
+  opacity: 0;
+  display: inline-block;
+  margin-right: 0.25em;
+}
+
+.word-reveal.visible {
+  animation: wordReveal 400ms ease-out forwards;
+}
+
+@keyframes wordReveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal-container .reveal-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 500ms ease-out, transform 500ms ease-out;
+}
+
+.reveal-container.revealed .reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes floatBlob1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+@keyframes floatBlob2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 20px) scale(1.08); }
+}
+
+@keyframes floatBlob3 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(20px, -30px); }
+}
+
+@keyframes buttonPulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@keyframes buttonSuccess {
+  0% { background: inherit; }
+  30% { background: rgba(16, 185, 129, 0.3); }
+  100% { background: inherit; }
+}
+
+@keyframes buttonError {
+  0% { background: inherit; }
+  30% { background: rgba(239, 68, 68, 0.3); }
+  100% { background: inherit; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Reduced motion override for everything */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
