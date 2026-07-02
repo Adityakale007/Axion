@@ -1,5 +1,7 @@
 {
-  "name": "realtime-code",
+  "name": "Axion",
+  "author": "Aditya Kale",
+  "description": "A real-time collaborative workspace for DSA practice and mock interviews.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -28,6 +30,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-rate-limit": "^8.0.1",
+    "framer-motion": "^12.42.2",
     "helmet": "^8.1.0",
     "html-to-image": "^1.11.13",
     "ioredis": "^5.10.1",

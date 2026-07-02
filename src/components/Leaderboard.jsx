@@ -26,79 +26,87 @@ const Leaderboard = ({ isOpen, onClose, platform, problemTitle }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#0d1117] p-6 shadow-2xl">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-zinc-950/80 p-4 backdrop-blur-sm transition-opacity">
+      <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-950 p-6 shadow-[0_0_80px_-15px_rgba(79,70,229,0.15)] sm:p-8">
         <button
           onClick={onClose}
-          className="absolute right-6 top-6 rounded-full border border-white/10 bg-white/5 p-2 text-gray-400 hover:bg-white/10 hover:text-white"
+          className="absolute right-6 top-6 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition-colors hover:border-zinc-700 hover:bg-zinc-800 hover:text-white"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
 
-        <div className="mb-6 flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-500">
+        {/* Header Section */}
+        <div className="mb-6 flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-400 shadow-sm shadow-indigo-500/10">
             <Trophy size={24} />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Today's Leaderboard</h3>
-            <p className="text-sm text-gray-400">{problemTitle || 'Daily Challenge'}</p>
+            <h3 className="text-xl font-black tracking-tight text-white sm:text-2xl">Today's Leaderboard</h3>
+            <p className="mt-1 text-sm font-medium text-zinc-400">{problemTitle || 'Daily Challenge'}</p>
           </div>
         </div>
 
-        <div className="mb-4 flex items-center gap-2 rounded-xl border border-white/5 bg-white/5 p-3">
-          <Users size={16} className="text-gray-500" />
-          <span className="text-sm font-medium text-gray-400">
-            {data.totalCount} {data.totalCount === 1 ? 'person' : 'people'} analysed this problem today
+        {/* Stats Bar */}
+        <div className="mb-6 flex items-center gap-2 rounded-xl border border-zinc-800/80 bg-zinc-900/50 p-3">
+          <Users size={16} className="text-indigo-400" />
+          <span className="text-sm font-medium text-zinc-300">
+            <strong className="text-white">{data.totalCount}</strong> {data.totalCount === 1 ? 'developer has' : 'developers have'} analyzed this problem today
           </span>
         </div>
 
+        {/* Main Content */}
         {loading ? (
-          <div className="space-y-4 py-8 animate-pulse">
+          <div className="space-y-3 py-6 animate-pulse">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-12 w-full rounded-xl bg-white/5" />
+              <div key={i} className="h-14 w-full rounded-xl bg-zinc-900/80" />
             ))}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-white/10 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-500">
-                  <th className="pb-4 pl-2">Rank</th>
-                  <th className="pb-4">Name</th>
-                  <th className="pb-4 text-center">Score</th>
-                  <th className="pb-4">Language</th>
-                  <th className="pb-4">Time Complexity</th>
+          <div className="overflow-x-auto rounded-2xl border border-zinc-800/60 bg-zinc-950">
+            <table className="w-full text-left whitespace-nowrap">
+              <thead className="bg-zinc-900/40">
+                <tr className="border-b border-zinc-800/80 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                  <th className="py-4 pl-6 pr-4">Rank</th>
+                  <th className="py-4 px-4">Developer</th>
+                  <th className="py-4 px-4 text-center">Score</th>
+                  <th className="py-4 px-4">Language</th>
+                  <th className="py-4 pr-6 pl-4 text-right">Complexity</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-zinc-800/60">
                 {data.entries.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className="py-8 text-center text-gray-500">No entries yet today. Be the first!</td>
+                    <td colSpan="5" className="py-12 text-center">
+                      <p className="text-sm font-medium text-zinc-500">No entries yet today. Be the first to solve it!</p>
+                    </td>
                   </tr>
                 ) : (
                   data.entries.map((entry, idx) => (
-                    <tr key={idx} className="group transition-colors hover:bg-white/[0.02]">
-                      <td className="py-4 pl-2">
-                        <span className={`flex h-8 w-8 items-center justify-center rounded-lg font-bold ${
-                          idx === 0 ? 'bg-amber-500 text-black' : 
-                          idx === 1 ? 'bg-gray-400 text-black' : 
-                          idx === 2 ? 'bg-[#cd7f32] text-black' : 'text-gray-400'
+                    <tr key={idx} className="group transition-colors hover:bg-zinc-900/50">
+                      <td className="py-3 pl-6 pr-4">
+                        <span className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold ${
+                          idx === 0 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.1)]' : 
+                          idx === 1 ? 'bg-zinc-300/10 text-zinc-300 border border-zinc-300/20' : 
+                          idx === 2 ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' : 
+                          'text-zinc-500'
                         }`}>
                           {idx + 1}
                         </span>
                       </td>
-                      <td className="py-4">
-                        <span className="font-semibold text-white">{entry.displayName}</span>
-                        <p className="text-[10px] text-gray-500">{new Date(entry.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                      <td className="py-3 px-4">
+                        <span className="text-sm font-bold text-zinc-100 group-hover:text-white transition-colors">{entry.displayName}</span>
+                        <p className="mt-0.5 text-[10px] font-medium text-zinc-500">{new Date(entry.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                       </td>
-                      <td className="py-4 text-center">
-                        <span className="text-lg font-bold text-amber-500">{entry.score}</span>
+                      <td className="py-3 px-4 text-center">
+                        <span className="inline-block text-lg font-black text-indigo-400">{entry.score}</span>
                       </td>
-                      <td className="py-4">
-                        <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-gray-300">{entry.language}</span>
+                      <td className="py-3 px-4">
+                        <span className="inline-flex rounded-md border border-zinc-700 bg-zinc-800 px-2 py-0.5 text-[11px] font-bold text-zinc-300">
+                          {entry.language}
+                        </span>
                       </td>
-                      <td className="py-4">
-                        <span className="text-sm font-medium text-gray-400">{entry.timeComplexity || 'O(?)'}</span>
+                      <td className="py-3 pr-6 pl-4 text-right">
+                        <span className="font-mono text-xs font-medium text-indigo-300">{entry.timeComplexity || 'O(?)'}</span>
                       </td>
                     </tr>
                   ))
@@ -108,10 +116,13 @@ const Leaderboard = ({ isOpen, onClose, platform, problemTitle }) => {
           </div>
         )}
 
-        {!localStorage.getItem('forkspace-token') && (
-          <p className="mt-6 text-center text-xs text-gray-500">
-            Sign in to appear on the leaderboard and save your history.
-          </p>
+        {/* Footer Prompt */}
+        {!localStorage.getItem('Axion-token') && (
+          <div className="mt-6 rounded-xl border border-dashed border-zinc-800 bg-zinc-900/30 py-4 text-center">
+            <p className="text-xs font-medium text-zinc-400">
+              Sign in to appear on the leaderboard and track your daily performance.
+            </p>
+          </div>
         )}
       </div>
     </div>

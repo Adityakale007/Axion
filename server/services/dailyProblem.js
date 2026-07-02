@@ -205,7 +205,7 @@ async function fetchLeetCodePOTD() {
   // Try Third-party API first (Alfa LeetCode API - popular community choice)
   try {
     const response = await fetch("https://alfa-leetcode-api.onrender.com/daily", {
-      headers: { "User-Agent": "ForkSpace/1.0" }
+      headers: { "User-Agent": "Axion/1.0" }
     });
 
     if (response.ok) {

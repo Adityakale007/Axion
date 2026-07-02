@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { getAuthToken } from '../lib/auth';
 import { getRandomAvatar } from '../lib/avatars';
 
-const SIDEBAR_WIDTH_KEY = 'forkspace.sidebarWidth';
+const SIDEBAR_WIDTH_KEY = 'Axion.sidebarWidth';
 const SIDEBAR_MIN = 260;
 const SIDEBAR_MAX = 500;
 const SIDEBAR_DEFAULT = 360;

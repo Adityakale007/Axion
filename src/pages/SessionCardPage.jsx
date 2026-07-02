@@ -95,8 +95,8 @@ function SessionCardPage() {
             </div>
 
             <div className="mt-6 flex items-center justify-between border-t border-slate-700 pt-4 text-xs text-slate-400">
-              <span>ForkSpace Session</span>
-              <a href="/new" className="text-amber-300 hover:underline">forkspace.app/new</a>
+              <span>Axion Session</span>
+              <a href="/new" className="text-amber-300 hover:underline">Axion.app/new</a>
             </div>
           </div>
         )}

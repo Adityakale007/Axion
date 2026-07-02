@@ -44,7 +44,7 @@ function normalizeLegacyAnalysis(result = {}, code = '') {
     return {
         overallScore: bugObjects.length === 0 ? 78 : Math.max(45, 78 - bugObjects.length * 8),
         verdict: bugObjects.length === 0 ? 'Legacy analysis · no obvious critical issues' : 'Legacy analysis · follow-up review advised',
-        summary: result.summary || 'This analysis was generated with the older ForkSpace analyzer and has been adapted into the new layout.',
+        summary: result.summary || 'This analysis was generated with the older Axion analyzer and has been adapted into the new layout.',
         complexity: {
             time: result.time_complexity || 'N/A',
             timeExplanation: result.complexity_reasoning || 'Legacy analysis did not include a separate time explanation.',
@@ -110,43 +110,43 @@ async function requestFromBases(bases, requestFactory) {
 }
 
 function scoreColor(score) {
-    if (score >= 80) return '#3fb950';
-    if (score >= 60) return '#d29922';
-    return '#f85149';
+    if (score >= 80) return '#00F5FF';
+    if (score >= 60) return '#1E90FF';
+    return '#ff5c8a';
 }
 
 function complexityTone(rating = 'acceptable') {
-    if (rating === 'optimal') return 'text-green-400';
-    if (rating === 'acceptable') return 'text-[#e6edf3]';
-    return 'text-amber-400';
+    if (rating === 'optimal') return 'text-emerald-300';
+    if (rating === 'acceptable') return 'text-[#EAF6FF]';
+    return 'text-amber-300';
 }
 
 function metricTone(type, value) {
     if (type === 'readability') {
-        if (value === 'High') return 'text-green-400';
-        if (value === 'Medium') return 'text-amber-400';
-        return 'text-red-400';
+        if (value === 'High') return 'text-emerald-300';
+        if (value === 'Medium') return 'text-amber-300';
+        return 'text-rose-300';
     }
 
     if (type === 'cyclomaticComplexity') {
-        if (value <= 5) return 'text-green-400';
-        if (value <= 10) return 'text-amber-400';
-        return 'text-red-400';
+        if (value <= 5) return 'text-emerald-300';
+        if (value <= 10) return 'text-amber-300';
+        return 'text-rose-300';
     }
 
     if (type === 'nestingDepth') {
-        if (value <= 3) return 'text-green-400';
-        if (value <= 5) return 'text-amber-400';
-        return 'text-red-400';
+        if (value <= 3) return 'text-emerald-300';
+        if (value <= 5) return 'text-amber-300';
+        return 'text-rose-300';
     }
 
-    return 'text-[#e6edf3]';
+    return 'text-[#EAF6FF]';
 }
 
 function readinessTone(value) {
-    if (value >= 80) return 'bg-green-500 text-green-400';
-    if (value >= 60) return 'bg-amber-500 text-amber-400';
-    return 'bg-red-500 text-red-400';
+    if (value >= 80) return 'ax-bar-good text-emerald-300';
+    if (value >= 60) return 'ax-bar-mid text-amber-300';
+    return 'ax-bar-low text-rose-300';
 }
 
 function ratingToFill(rating = 'acceptable') {
@@ -160,10 +160,10 @@ function ratingToFill(rating = 'acceptable') {
 
 function pillClass(kind) {
     const map = {
-        green: 'border-green-500/30 bg-green-500/10 text-green-400',
-        amber: 'border-amber-500/30 bg-amber-500/10 text-amber-400',
-        red: 'border-red-500/30 bg-red-500/10 text-red-400',
-        blue: 'border-sky-500/30 bg-sky-500/10 text-sky-300',
+        green: 'ax-pill ax-pill-green',
+        amber: 'ax-pill ax-pill-amber',
+        red: 'ax-pill ax-pill-red',
+        blue: 'ax-pill ax-pill-blue',
     };
     return map[kind] || map.blue;
 }
@@ -184,10 +184,10 @@ function Section({ index, title, children }) {
         <section
             ref={tiltRef}
             data-cursor="card"
-            className="rounded-xl border border-[#21262d] bg-[#161b22] p-4 opacity-0"
+            className="ax-card rounded-2xl p-4 opacity-0"
             style={{ transformStyle: 'preserve-3d', willChange: 'transform', animation: `fadeUp 0.45s ease ${index * 0.1}s forwards` }}
         >
-            <h2 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#8b949e]">{title}</h2>
+            <h2 className="mb-4 text-[11px] font-bold uppercase tracking-[0.22em] text-[#00D4FF]" style={{ textShadow: '0 0 10px rgba(0,212,255,0.35)' }}>{title}</h2>
             {children}
         </section>
     );
@@ -288,7 +288,7 @@ function AnalysePage({ isDaily = false }) {
             }
 
             const link = document.createElement('a');
-            link.download = `forkspace-score-${Date.now()}.png`;
+            link.download = `Axion-score-${Date.now()}.png`;
             link.href = dataUrl;
             link.click();
 
@@ -306,7 +306,7 @@ function AnalysePage({ isDaily = false }) {
             if (!displayAnalysis) return;
 
             const response = await axios.post(`${serverUrl}/api/challenge/create`, {
-                challengerName: localStorage.getItem('forkspace-username') || 'Anonymous',
+                challengerName: localStorage.getItem('Axion-username') || 'Anonymous',
                 challengerScore: displayAnalysis.overallScore,
                 challengerVerdict: displayAnalysis.verdict,
                 challengerTimeComplexity: displayAnalysis.complexity.time,
@@ -319,7 +319,7 @@ function AnalysePage({ isDaily = false }) {
             await navigator.clipboard.writeText(challengeUrl);
             
             const waText = encodeURIComponent( 
-                `I scored ${displayAnalysis.overallScore}/100 on ForkSpace Daily Challenge${ 
+                `I scored ${displayAnalysis.overallScore}/100 on Axion Daily Challenge${ 
                   activeDailyProblem?.platform === 'leetcode' ? " (today's LeetCode POTD)" : 
                   activeDailyProblem?.platform === 'codeforces' ? " (today's CF Daily)" : "" 
                 }. Can you beat it? ${challengeUrl}` 
@@ -344,7 +344,7 @@ function AnalysePage({ isDaily = false }) {
     const lineCount = code ? code.split(/\r?\n/).length : 0;
     const charCount = code.length;
     const displayAnalysis = analysis ? normalizeAnalysisPayload(analysis, code) : null;
-    const provider = displayAnalysis?.provider || 'ForkSpace AI';
+    const provider = displayAnalysis?.provider || 'Axion AI';
     const circumference = 251;
     const currentScoreValue = displayAnalysis?.overallScore || 0;
     const scoreOffset = circumference - (animatedScore / 100) * circumference;
@@ -442,7 +442,7 @@ function AnalysePage({ isDaily = false }) {
                     timeComplexity: parsedResult.complexity.time,
                     spaceComplexity: parsedResult.complexity.space,
                     language: language,
-                    displayName: localStorage.getItem('forkspace-username') || 'Anonymous'
+                    displayName: localStorage.getItem('Axion-username') || 'Anonymous'
                 }).catch(err => console.error('Leaderboard auto-submit failed:', err));
             }
 
@@ -471,11 +471,11 @@ function AnalysePage({ isDaily = false }) {
             title: 'Overall Score',
             content: (
                 <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
-                    <div className="rounded-2xl border border-[#30363d] bg-[#0d1117] p-5">
+                    <div className="ax-subcard rounded-2xl p-5">
                         <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                            <div className={`relative h-28 w-28 shrink-0 transition-shadow duration-300 ${scorePulse ? 'shadow-[0_0_20px_rgba(245,158,11,0.5)] rounded-full' : ''}`}>
+                            <div className={`ax-ring-wrap relative h-28 w-28 shrink-0 rounded-full transition-shadow duration-300 ${scorePulse ? 'ax-ring-pulse' : ''}`}>
                         <svg className="h-28 w-28 -rotate-90" viewBox="0 0 80 80" aria-hidden="true">
-                            <circle cx="40" cy="40" r="32" stroke="#21262d" strokeWidth="8" fill="none" />
+                            <circle cx="40" cy="40" r="32" stroke="#18213a" strokeWidth="8" fill="none" />
                             <circle
                                 cx="40"
                                 cy="40"
@@ -486,36 +486,36 @@ function AnalysePage({ isDaily = false }) {
                                 strokeLinecap="round"
                                 strokeDasharray={circumference}
                                 strokeDashoffset={scoreOffset}
-                                style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1)' }}
+                                style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1)', filter: `drop-shadow(0 0 6px ${scoreColor(animatedScore)})` }}
                             />
                         </svg>
-                        <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-[#e6edf3]">{animatedScore}</div>
+                        <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-[#EAF6FF]">{animatedScore}</div>
                             </div>
                             <div className="min-w-0 flex-1">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8b949e]">ForkSpace verdict</p>
-                                <h3 className="mt-2 text-2xl font-semibold text-[#e6edf3]">{displayAnalysis.verdict}</h3>
+                                <p className="ax-eyebrow">Axion verdict</p>
+                                <h3 className="mt-2 text-2xl font-semibold text-[#EAF6FF]">{displayAnalysis.verdict}</h3>
                                 {percentileText && (
-                                    <p className="mt-1 text-xs font-bold text-amber-500 uppercase tracking-wider">{percentileText}</p>
+                                    <p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#00F5FF]" style={{ textShadow: '0 0 8px rgba(0,245,255,0.4)' }}>{percentileText}</p>
                                 )}
                                 
                                 {isDaily && isDbConnected && (
                                     <button 
                                         onClick={() => setIsLeaderboardOpen(true)}
-                                        className="mt-2 inline-flex items-center gap-2 rounded-lg bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-500 transition hover:bg-amber-500/20"
+                                        className="ax-mini-btn mt-2"
                                     >
                                         🏆 View Today's Leaderboard
                                     </button>
                                 )}
 
-                                <p className="mt-3 text-base leading-8 text-[#c9d1d9]">{displayAnalysis.summary}</p>
+                                <p className="mt-3 text-base leading-8 text-[#c9d9ee]">{displayAnalysis.summary}</p>
                                 <div className="mt-4 flex flex-wrap gap-2">
                                     {displayAnalysis.tags.map((tag) => (
-                                        <span key={tag} className={`rounded-full border px-3 py-1 text-xs ${pillClass('blue')}`}>{tag}</span>
+                                        <span key={tag} className={pillClass('blue')}>{tag}</span>
                                     ))}
-                                    <span className={`rounded-full border px-3 py-1 text-xs ${displayAnalysis.bugs.length ? pillClass('red') : pillClass('green')}`}>
+                                    <span className={displayAnalysis.bugs.length ? pillClass('red') : pillClass('green')}>
                                         {displayAnalysis.bugs.length} issues
                                     </span>
-                                    <span className={`rounded-full border px-3 py-1 text-xs ${displayAnalysis.complexity.timeRating === 'optimal' ? pillClass('green') : pillClass('amber')}`}>
+                                    <span className={displayAnalysis.complexity.timeRating === 'optimal' ? pillClass('green') : pillClass('amber')}>
                                         {displayAnalysis.complexity.timeRating}
                                     </span>
                                 </div>
@@ -523,13 +523,13 @@ function AnalysePage({ isDaily = false }) {
                         </div>
                     </div>
                     <div className="grid gap-3">
-                        <div ref={editorRef} className="rounded-xl border border-[#30363d] bg-[#0d1117] p-4">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8b949e]">Time complexity</p>
-                            <p className="mt-3 text-2xl font-bold text-[#79c0ff]">{displayAnalysis.complexity.time}</p>
+                        <div ref={editorRef} className="ax-subcard rounded-2xl p-4">
+                            <p className="ax-eyebrow">Time complexity</p>
+                            <p className="mt-3 text-2xl font-bold text-[#00D4FF]" style={{ textShadow: '0 0 10px rgba(0,212,255,0.35)' }}>{displayAnalysis.complexity.time}</p>
                         </div>
-                        <div className="rounded-2xl border border-[#30363d] bg-[#0d1117] p-4">
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#8b949e]">Space complexity</p>
-                            <p className="mt-3 text-2xl font-bold text-green-400">{displayAnalysis.complexity.space}</p>
+                        <div className="ax-subcard rounded-2xl p-4">
+                            <p className="ax-eyebrow">Space complexity</p>
+                            <p className="mt-3 text-2xl font-bold text-[#00F5FF]" style={{ textShadow: '0 0 10px rgba(0,245,255,0.35)' }}>{displayAnalysis.complexity.space}</p>
                         </div>
                     </div>
                 </div>
@@ -545,22 +545,22 @@ function AnalysePage({ isDaily = false }) {
                             ['TIME COMPLEXITY', displayAnalysis.complexity.time, displayAnalysis.complexity.timeExplanation, displayAnalysis.complexity.timeRating],
                             ['SPACE COMPLEXITY', displayAnalysis.complexity.space, displayAnalysis.complexity.spaceExplanation, displayAnalysis.complexity.spaceRating],
                         ].map(([label, value, explanation, rating]) => (
-                            <div key={label} className="rounded-2xl border border-[#21262d] bg-[#0d1117] p-4">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#6e7681]">{label}</p>
+                            <div key={label} className="ax-subcard rounded-2xl p-4">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#6f88a8]">{label}</p>
                                 <p className={`mt-4 font-mono text-4xl ${complexityTone(rating)}`}>{value}</p>
-                                <span className={`mt-3 inline-flex rounded-full border px-3 py-1 text-xs ${rating === 'optimal' ? pillClass('green') : rating === 'acceptable' ? pillClass('blue') : pillClass('amber')}`}>
+                                <span className={rating === 'optimal' ? pillClass('green') : rating === 'acceptable' ? pillClass('blue') : pillClass('amber')}>
                                     {rating}
                                 </span>
-                                <p className="mt-4 text-sm leading-7 text-[#c9d1d9]">{explanation}</p>
-                                <div className="mt-4 rounded-xl border border-[#21262d] bg-[#11161d] px-4 py-3 text-sm text-[#8b949e]">
+                                <p className="mt-4 text-sm leading-7 text-[#c9d9ee]">{explanation}</p>
+                                <div className="ax-inset mt-4 rounded-xl px-4 py-3 text-sm text-[#91A8C3]">
                                     Complexity confidence: {ratingToFill(rating)} / 100
                                 </div>
                             </div>
                         ))}
                     </div>
                     {displayAnalysis.complexity.constraintWarning ? (
-                        <div className="rounded-lg border border-[#21262d] bg-[#0d1117] p-3 text-sm leading-7 text-[#8b949e]">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#8b949e]">Constraint Check</p>
+                        <div className="ax-subcard rounded-lg p-3 text-sm leading-7 text-[#91A8C3]">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#6f88a8]">Constraint Check</p>
                             <p className="mt-2">{displayAnalysis.complexity.constraintWarning}</p>
                         </div>
                     ) : null}
@@ -573,22 +573,22 @@ function AnalysePage({ isDaily = false }) {
             content: displayAnalysis.patterns.length ? (
                 <div className="space-y-3">
                     {displayAnalysis.patterns.map((pattern) => (
-                        <div key={`${pattern.name}-${pattern.confidence}`} className="flex items-start gap-3 rounded-lg border border-[#21262d] bg-[#0d1117] p-3">
-                            <div className="mt-1 h-10 w-10 rounded-lg bg-sky-500/10 text-center text-lg leading-10 text-sky-300">A</div>
+                        <div key={`${pattern.name}-${pattern.confidence}`} className="ax-subcard flex items-start gap-3 rounded-lg p-3">
+                            <div className="ax-icon-chip mt-1 h-10 w-10 rounded-lg text-center text-lg leading-10">A</div>
                             <div className="min-w-0 flex-1">
                                 <div className="flex items-center justify-between gap-3">
-                                    <p className="font-medium text-[#e6edf3]">{pattern.name}</p>
-                                    <span className={`text-xs font-semibold ${pattern.confidence >= 90 ? 'text-green-400' : pattern.confidence >= 60 ? 'text-[#e6edf3]' : 'text-amber-400'}`}>
+                                    <p className="font-medium text-[#EAF6FF]">{pattern.name}</p>
+                                    <span className={`text-xs font-semibold ${pattern.confidence >= 90 ? 'text-emerald-300' : pattern.confidence >= 60 ? 'text-[#EAF6FF]' : 'text-amber-300'}`}>
                                         {pattern.confidence}% {pattern.confidence < 60 ? 'Suggestion' : 'confidence'}
                                     </span>
                                 </div>
-                                <p className="mt-1 text-sm text-[#8b949e]">{pattern.description}</p>
+                                <p className="mt-1 text-sm text-[#91A8C3]">{pattern.description}</p>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <p className="text-sm text-[#8b949e]">No specific algorithmic patterns detected.</p>
+                <p className="text-sm text-[#91A8C3]">No specific algorithmic patterns detected.</p>
             ),
         },
         {
@@ -597,31 +597,31 @@ function AnalysePage({ isDaily = false }) {
             content: displayAnalysis.bugs.length ? (
                 <div className="space-y-3">
                     {displayAnalysis.bugs.map((bug) => (
-                        <div key={`${bug.title}-${bug.location}`} className="flex overflow-hidden rounded-lg border border-[#21262d] bg-[#0d1117]">
-                            <div className={`w-1 ${bug.severity === 'critical' ? 'bg-red-500' : bug.severity === 'high' ? 'bg-amber-400' : bug.severity === 'medium' ? 'bg-sky-400' : 'bg-[#6e7681]'}`} />
+                        <div key={`${bug.title}-${bug.location}`} className="ax-subcard flex overflow-hidden rounded-lg">
+                            <div className={`w-1 ${bug.severity === 'critical' ? 'bg-rose-500' : bug.severity === 'high' ? 'bg-amber-400' : bug.severity === 'medium' ? 'bg-sky-400' : 'bg-[#3a4a6b]'}`} />
                             <div className="flex-1 p-4">
                                 <div className="flex flex-wrap items-center gap-3">
-                                    <span className={`rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${bug.severity === 'critical' ? pillClass('red') : bug.severity === 'high' ? pillClass('amber') : bug.severity === 'medium' ? pillClass('blue') : 'border-[#30363d] bg-[#161b22] text-[#8b949e]'}`}>
+                                    <span className={bug.severity === 'critical' ? pillClass('red') : bug.severity === 'high' ? pillClass('amber') : bug.severity === 'medium' ? pillClass('blue') : 'ax-pill'}>
                                         {bug.severity}
                                     </span>
-                                    <h3 className="text-sm font-medium text-[#e6edf3]">{bug.title}</h3>
+                                    <h3 className="text-sm font-medium text-[#EAF6FF]">{bug.title}</h3>
                                 </div>
-                                <p className="mt-2 text-[11px] uppercase tracking-[0.16em] text-[#6e7681]">{bug.location}</p>
-                                <p className="mt-2 text-sm leading-6 text-[#8b949e]">{bug.explanation}</p>
-                                <pre className="mt-3 overflow-x-auto rounded-lg bg-[#11161d] p-3 font-mono text-[11px] leading-6 text-[#8b949e]">{bug.fix}</pre>
+                                <p className="mt-2 text-[11px] uppercase tracking-[0.16em] text-[#6f88a8]">{bug.location}</p>
+                                <p className="mt-2 text-sm leading-6 text-[#91A8C3]">{bug.explanation}</p>
+                                <pre className="ax-code-block mt-3 overflow-x-auto p-3 font-mono text-[11px] leading-6">{bug.fix}</pre>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <div className="rounded-lg border border-green-500/20 bg-green-500/10 p-4 text-sm text-green-400">No critical issues found.</div>
+                <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-4 text-sm text-emerald-300">No critical issues found.</div>
             ),
         },
         {
             key: 'metrics',
             title: 'Code Metrics',
             content: (
-                <div className="grid gap-px rounded-xl bg-[#21262d] md:grid-cols-3">
+                <div className="ax-metric-grid grid gap-px rounded-xl md:grid-cols-3">
                     {[
                         ['Lines of code', displayAnalysis.metrics.linesOfCode, 'default'],
                         ['Cyclomatic complexity', displayAnalysis.metrics.cyclomaticComplexity, 'cyclomaticComplexity'],
@@ -630,8 +630,8 @@ function AnalysePage({ isDaily = false }) {
                         ['Branch count', displayAnalysis.metrics.branchCount, 'default'],
                         ['Readability', displayAnalysis.metrics.readability, 'readability'],
                     ].map(([label, value, type]) => (
-                        <div key={label} className="bg-[#0d1117] p-4">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#6e7681]">{label}</p>
+                        <div key={label} className="ax-metric-cell p-4">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#6f88a8]">{label}</p>
                             <p className={`mt-3 text-lg font-bold ${metricTone(type, value)}`}>{value}</p>
                         </div>
                     ))}
@@ -643,17 +643,17 @@ function AnalysePage({ isDaily = false }) {
             title: 'Concrete Optimization',
             content: (
                 <div className="space-y-4">
-                    <div className="grid gap-px rounded-xl bg-[#21262d] md:grid-cols-2">
-                        <div className="bg-[#0d1117] p-3">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-red-400">Before</p>
-                            <pre className="mt-3 overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-6 text-[#8b949e]">{displayAnalysis.optimization.before}</pre>
+                    <div className="ax-metric-grid grid gap-px rounded-xl md:grid-cols-2">
+                        <div className="ax-metric-cell p-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-rose-300">Before</p>
+                            <pre className="mt-3 overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-6 text-[#91A8C3]">{displayAnalysis.optimization.before}</pre>
                         </div>
-                        <div className="bg-[#0d1117] p-3">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-green-400">After</p>
-                            <pre className="mt-3 overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-6 text-[#e6edf3]">{displayAnalysis.optimization.after}</pre>
+                        <div className="ax-metric-cell p-3">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-emerald-300">After</p>
+                            <pre className="mt-3 overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-6 text-[#EAF6FF]">{displayAnalysis.optimization.after}</pre>
                         </div>
                     </div>
-                    <div className="rounded-lg border border-green-500/20 bg-green-500/10 p-3 text-sm text-green-400">
+                    <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 p-3 text-sm text-emerald-300">
                         <p>{displayAnalysis.optimization.summary || displayAnalysis.optimization.complexityChange}</p>
                         <p className="mt-2">Up: {displayAnalysis.optimization.explanation}</p>
                     </div>
@@ -666,11 +666,11 @@ function AnalysePage({ isDaily = false }) {
             content: (
                 <div className="space-y-3">
                     {displayAnalysis.style.length ? displayAnalysis.style.map((item, itemIndex) => (
-                        <div key={`${item.text}-${itemIndex}`} className="flex items-start gap-3 text-sm text-[#8b949e]">
-                            <span className={`mt-2 h-2.5 w-2.5 rounded-full ${item.type === 'warning' ? 'bg-amber-400' : item.type === 'good' ? 'bg-green-400' : 'bg-sky-400'}`} />
-                            <p><span className="font-medium text-[#e6edf3]">{item.type}</span> {item.text}</p>
+                        <div key={`${item.text}-${itemIndex}`} className="flex items-start gap-3 text-sm text-[#91A8C3]">
+                            <span className={`mt-2 h-2.5 w-2.5 rounded-full ${item.type === 'warning' ? 'bg-amber-400' : item.type === 'good' ? 'bg-emerald-400' : 'bg-[#00D4FF]'}`} style={{ boxShadow: item.type === 'good' ? '0 0 6px #34d399' : item.type === 'warning' ? '0 0 6px #fbbf24' : '0 0 6px #00D4FF' }} />
+                            <p><span className="font-medium text-[#EAF6FF]">{item.type}</span> {item.text}</p>
                         </div>
-                    )) : <p className="text-sm text-[#8b949e]">No extra style remarks from the analyzer.</p>}
+                    )) : <p className="text-sm text-[#91A8C3]">No extra style remarks from the analyzer.</p>}
                 </div>
             ),
         },
@@ -690,26 +690,26 @@ function AnalysePage({ isDaily = false }) {
                         ].map(([label, value]) => {
                             const [barClass, textClass] = readinessTone(value).split(' ');
                             return (
-                                <div key={label} className="rounded-2xl border border-[#21262d] bg-[#0d1117] p-4">
+                                <div key={label} className="ax-subcard rounded-2xl p-4">
                                     <div className="flex items-center justify-between gap-3">
-                                        <p className="text-sm text-[#e6edf3]">{label}</p>
+                                        <p className="text-sm text-[#EAF6FF]">{label}</p>
                                         <span className={`text-2xl font-bold ${textClass}`}>{value}%</span>
                                     </div>
-                                    <div className="mt-4 rounded-xl border border-[#21262d] bg-[#11161d] px-4 py-3">
-                                        <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-[#8b949e]">
+                                    <div className="ax-inset mt-4 rounded-xl px-4 py-3">
+                                        <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] text-[#6f88a8]">
                                             <span>Readiness</span>
                                             <span>{value >= 80 ? 'Strong' : value >= 60 ? 'Solid' : 'Needs work'}</span>
                                         </div>
-                                        <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#161b22]">
-                                            <div className={`h-full rounded-full ${barClass}`} style={{ width: `${value}%`, animation: 'barGrow 0.65s ease 0.4s both' }} />
+                                        <div className="mt-3 h-2 overflow-hidden rounded-full bg-[#0c1428]">
+                                            <div className={`ax-fill-bar h-full rounded-full ${barClass}`} style={{ width: `${value}%`, animation: 'barGrow 0.65s ease 0.4s both' }} />
                                         </div>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
-                    <div className="rounded-lg border border-amber-500/20 bg-[#0d1117] p-4 text-sm leading-7 text-[#8b949e]">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-amber-400">To Reach 95+</p>
+                    <div className="ax-subcard rounded-lg p-4 text-sm leading-7 text-[#91A8C3]">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-amber-300">To Reach 95+</p>
                         <p className="mt-2">{displayAnalysis.interviewReadiness.toReach95}</p>
                     </div>
                 </div>
@@ -721,7 +721,7 @@ function AnalysePage({ isDaily = false }) {
             content: (
                 <div className="space-y-3">
                     {displayAnalysis.missedEdgeCases.map((edgeCase, edgeIndex) => (
-                        <div key={`${edgeCase}-${edgeIndex}`} className="border-l-4 border-red-500 bg-[#0d1117] p-3 text-sm text-[#e6edf3]">
+                        <div key={`${edgeCase}-${edgeIndex}`} className="ax-subcard border-l-4 border-rose-500 p-3 text-sm text-[#EAF6FF]">
                             {edgeCase}
                         </div>
                     ))}
@@ -738,32 +738,32 @@ function AnalysePage({ isDaily = false }) {
                             key={`${problem.name}-${problem.rating}`}
                             type="button"
                             onClick={() => openProblemSearch(problem)}
-                            className="w-full rounded-lg border border-[#21262d] bg-[#0d1117] p-4 text-left transition hover:border-sky-500/40"
+                            className="ax-subcard ax-hoverable w-full rounded-lg p-4 text-left"
                         >
                             <div className="flex flex-wrap items-center gap-3">
-                                <span className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${problem.difficulty === 'Easy' ? pillClass('green') : problem.difficulty === 'Hard' ? pillClass('red') : pillClass('amber')}`}>
+                                <span className={`rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] ${problem.difficulty === 'Easy' ? 'text-emerald-300' : problem.difficulty === 'Hard' ? 'text-rose-300' : 'text-amber-300'}`}>
                                     {problem.difficulty[0]}
                                 </span>
-                                <p className="font-medium text-[#e6edf3]">{problem.name}</p>
-                                <span className="text-xs text-[#8b949e]">{problem.rating}</span>
+                                <p className="font-medium text-[#EAF6FF]">{problem.name}</p>
+                                <span className="text-xs text-[#91A8C3]">{problem.rating}</span>
                             </div>
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {problem.tags.map((tag) => (
-                                    <span key={tag} className={`rounded-full border px-2 py-1 text-[10px] ${pillClass('blue')}`}>{tag}</span>
+                                    <span key={tag} className={pillClass('blue')}>{tag}</span>
                                 ))}
                             </div>
-                            <p className="mt-3 text-sm text-[#8b949e]">{problem.reason}</p>
+                            <p className="mt-3 text-sm text-[#91A8C3]">{problem.reason}</p>
                         </button>
                     ))}
                 </div>
             ) : (
-                <p className="text-sm text-[#8b949e]">No similar Codeforces problems suggested yet.</p>
+                <p className="text-sm text-[#91A8C3]">No similar Codeforces problems suggested yet.</p>
             ),
         },
     ] : [];
 
     return (
-        <div className="h-screen overflow-hidden bg-[#0d1117] text-[#e6edf3]">
+        <div className="ax-shell h-screen overflow-hidden text-[#EAF6FF]">
             <style>{`
                 @keyframes fadeUp {
                     from { opacity: 0; transform: translateY(10px); }
@@ -777,32 +777,164 @@ function AnalysePage({ isDaily = false }) {
                     0% { transform: translateX(-100%); }
                     100% { transform: translateX(220%); }
                 }
+                @keyframes axRingPulse {
+                    0%, 100% { box-shadow: 0 0 0 0 rgba(0,212,255,0.5); }
+                    50% { box-shadow: 0 0 0 10px rgba(0,212,255,0); }
+                }
+                .ax-shell {
+                    background:
+                        radial-gradient(120% 100% at 0% 0%, rgba(0,212,255,0.06), transparent 55%),
+                        radial-gradient(90% 90% at 100% 100%, rgba(124,92,255,0.06), transparent 50%),
+                        linear-gradient(180deg, #0b1426 0%, #101C34 55%, #0b1426 100%);
+                }
+                .ax-header {
+                    background: rgba(16,28,52,0.75);
+                    border-bottom: 1px solid rgba(0,212,255,0.14);
+                    backdrop-filter: blur(14px);
+                    -webkit-backdrop-filter: blur(14px);
+                }
+                .ax-brand-badge {
+                    background: linear-gradient(135deg, #152544, #0c1428);
+                    border: 1px solid rgba(0,212,255,0.25);
+                    box-shadow: 0 0 16px rgba(0,212,255,0.15);
+                }
+                .ax-ghost-btn {
+                    border: 1px solid rgba(0,212,255,0.22);
+                    background: rgba(9,14,26,0.5);
+                    color: #cfeaff;
+                    transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+                }
+                .ax-ghost-btn:hover { border-color: rgba(0,212,255,0.55); background: rgba(0,212,255,0.08); }
+                .ax-ghost-btn:focus-visible { outline: 2px solid #00F5FF; outline-offset: 2px; }
+                .ax-aside {
+                    background: linear-gradient(180deg, rgba(21,37,68,0.55), rgba(16,28,52,0.7));
+                    border-right: 1px solid rgba(0,212,255,0.12);
+                }
+                .ax-card {
+                    background: rgba(18,34,66,0.65);
+                    border: 1px solid rgba(0,212,255,0.16);
+                    backdrop-filter: blur(14px);
+                    -webkit-backdrop-filter: blur(14px);
+                    box-shadow: 0 16px 44px -28px rgba(0,0,0,0.7);
+                    transition: border-color 220ms ease, box-shadow 220ms ease;
+                }
+                .ax-card:hover { border-color: rgba(0,212,255,0.32); box-shadow: 0 18px 50px -24px rgba(0,212,255,0.25); }
+                .ax-subcard {
+                    background: rgba(9,14,26,0.55);
+                    border: 1px solid rgba(0,212,255,0.12);
+                }
+                .ax-inset {
+                    background: rgba(6,10,20,0.6);
+                    border: 1px solid rgba(0,212,255,0.1);
+                }
+                .ax-hoverable { transition: border-color 200ms ease, transform 200ms ease; }
+                .ax-hoverable:hover { border-color: rgba(0,212,255,0.4); transform: translateY(-1px); }
+                .ax-eyebrow {
+                    font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: #91A8C3;
+                }
+                .ax-input, .ax-select, .ax-textarea {
+                    background: rgba(9,14,26,0.6);
+                    border: 1px solid rgba(0,212,255,0.18);
+                    color: #EAF6FF;
+                    transition: border-color 180ms ease, box-shadow 180ms ease;
+                }
+                .ax-input:focus, .ax-select:focus, .ax-textarea:focus {
+                    outline: none;
+                    border-color: rgba(0,212,255,0.55);
+                    box-shadow: 0 0 0 3px rgba(0,212,255,0.14);
+                }
+                .ax-primary-btn {
+                    background: linear-gradient(135deg, #1E90FF, #00B8E6);
+                    box-shadow: 0 0 0 1px rgba(0,212,255,0.4) inset, 0 10px 28px -10px rgba(0,212,255,0.65);
+                    color: white;
+                    transition: transform 180ms ease, filter 180ms ease;
+                }
+                .ax-primary-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.08); }
+                .ax-primary-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+                .ax-primary-btn:focus-visible { outline: 2px solid #00F5FF; outline-offset: 2px; }
+                .ax-pill {
+                    display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 12px;
+                    font-size: 11px; font-weight: 700; border: 1px solid rgba(0,212,255,0.2);
+                    background: rgba(0,212,255,0.06); color: #9fe8ff;
+                }
+                .ax-pill-blue { border-color: rgba(0,212,255,0.32); background: rgba(0,212,255,0.1); color: #9fe8ff; }
+                .ax-pill-green { border-color: rgba(52,211,153,0.35); background: rgba(52,211,153,0.1); color: #6ee7b7; }
+                .ax-pill-amber { border-color: rgba(251,191,36,0.35); background: rgba(251,191,36,0.1); color: #fcd34d; }
+                .ax-pill-red { border-color: rgba(255,92,138,0.35); background: rgba(255,92,138,0.1); color: #ff9db8; }
+                .ax-mini-btn {
+                    display: inline-flex; align-items: center; gap: 8px; border-radius: 10px; padding: 6px 12px;
+                    font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
+                    background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.3); color: #00D4FF;
+                    transition: background 160ms ease;
+                }
+                .ax-mini-btn:hover { background: rgba(0,212,255,0.18); }
+                .ax-icon-chip {
+                    background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25); color: #00D4FF;
+                }
+                .ax-code-block {
+                    background: rgba(6,10,20,0.75); border: 1px solid rgba(0,212,255,0.1); border-radius: 10px; color: #91A8C3;
+                }
+                .ax-metric-grid { background: rgba(0,212,255,0.1); }
+                .ax-metric-cell { background: rgba(9,14,26,0.65); }
+                .ax-ring-wrap { transition: box-shadow 200ms ease; }
+                .ax-ring-pulse { animation: axRingPulse 0.6s ease; }
+                .ax-bar-good { background: linear-gradient(90deg, #1E90FF, #00F5FF); box-shadow: 0 0 10px rgba(0,245,255,0.6); }
+                .ax-bar-mid { background: linear-gradient(90deg, #d29922, #fcd34d); box-shadow: 0 0 10px rgba(251,191,36,0.5); }
+                .ax-bar-low { background: linear-gradient(90deg, #ef4444, #ff5c8a); box-shadow: 0 0 10px rgba(255,92,138,0.5); }
+                .ax-fill-bar { transition: width 0.65s ease; }
+                .ax-loading-scan {
+                    position: relative; height: 3px; width: 100%; max-width: 36rem; overflow: hidden; border-radius: 999px;
+                    background: rgba(0,212,255,0.08);
+                }
+                .ax-loading-scan::after {
+                    content: ''; position: absolute; top: 0; bottom: 0; width: 32%;
+                    background: linear-gradient(90deg, transparent, #00D4FF, #7C5CFF, transparent);
+                    box-shadow: 0 0 16px rgba(0,212,255,0.7);
+                    animation: pulseTrack 1.1s linear infinite;
+                }
+                .ax-action-tile {
+                    border: 1px solid rgba(0,212,255,0.2); background: rgba(9,14,26,0.5);
+                    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+                }
+                .ax-action-tile:hover { transform: translateY(-2px); border-color: rgba(0,212,255,0.5); background: rgba(0,212,255,0.06); }
+                .ax-action-tile-cyan:hover { border-color: rgba(0,245,255,0.5); background: rgba(0,245,255,0.06); }
+                .ax-action-tile-purple:hover { border-color: rgba(124,92,255,0.5); background: rgba(124,92,255,0.06); }
+                .ax-modal {
+                    background: linear-gradient(180deg, rgba(21,37,68,0.96), rgba(10,17,33,0.98));
+                    border: 1px solid rgba(0,212,255,0.28);
+                    box-shadow: 0 30px 90px -30px rgba(0,212,255,0.4);
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .ax-loading-scan::after { animation: none; left: 0; width: 100%; opacity: 0.5; }
+                    .ax-ring-pulse { animation: none; }
+                    .ax-hoverable:hover, .ax-action-tile:hover, .ax-primary-btn:hover:not(:disabled) { transform: none; }
+                }
             `}</style>
 
-            <header className="flex items-center justify-between border-b border-[#21262d] px-5 py-4">
-                <Link to="/" data-cursor="button" className="flex items-center gap-3 rounded-xl px-1 py-1 transition hover:bg-[#161b22]">
-                    <div className="rounded-lg bg-white p-1 shadow-sm ring-1 ring-black/5">
-                        <img src="/logo.png" alt="ForkSpace logo" className="h-8 w-8 rounded-lg object-contain" />
+            <header className="ax-header flex items-center justify-between px-5 py-4">
+                <Link to="/" data-cursor="button" className="flex items-center gap-3 rounded-xl px-1 py-1 transition hover:bg-[rgba(0,212,255,0.06)]">
+                    <div className="ax-brand-badge rounded-lg p-1">
+                        <img src="/logo.png" alt="Axion logo" className="h-8 w-8 rounded-lg object-contain" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold tracking-[0.25em] text-[#79c0ff]">ForkSpace - Solution Analyser</p>
-                        <p className="mt-1 text-xs text-[#8b949e]">Deep analytics for interview-style and Codeforces-style solutions.</p>
+                        <p className="text-sm font-bold tracking-[0.25em] text-[#00D4FF]" style={{ textShadow: '0 0 10px rgba(0,212,255,0.4)' }}>Axion - Solution Analyser</p>
+                        <p className="mt-1 text-xs text-[#91A8C3]">Deep analytics for interview-style and Codeforces-style solutions.</p>
                     </div>
                 </Link>
                 <div className="flex items-center gap-3">
-                    <Link data-cursor="button" to="/history/reports" className="rounded-lg border border-[#30363d] px-3 py-2 text-sm text-[#e6edf3] transition hover:border-[#79c0ff]">History</Link>
-                    <button data-cursor="button" type="button" onClick={copyShareLink} className="rounded-lg border border-[#30363d] px-3 py-2 text-sm text-[#e6edf3] transition hover:border-[#79c0ff]">Share</button>
+                    <Link data-cursor="button" to="/history/reports" className="ax-ghost-btn rounded-lg px-3 py-2 text-sm">History</Link>
+                    <button data-cursor="button" type="button" onClick={copyShareLink} className="ax-ghost-btn rounded-lg px-3 py-2 text-sm">Share</button>
                 </div>
             </header>
 
             <div className="flex h-[calc(100vh-73px)]">
-                <aside className="flex h-full w-full flex-col border-r border-[#21262d] lg:w-[40%] xl:w-[38%]">
+                <aside className="ax-aside flex h-full w-full flex-col lg:w-[40%] xl:w-[38%]">
                     <div className="overflow-y-auto px-5 py-5">
                         <div className="mb-6 space-y-2">
                             <h1 className="text-2xl font-bold text-white">
                                 {isDaily ? 'Daily Challenge' : 'Solution Analyser'}
                             </h1>
-                            <p className="text-sm text-[#8b949e]">
+                            <p className="text-sm text-[#91A8C3]">
                                 {isDaily 
                                     ? 'Daily problems. Deep analysis. Real rankings. Challenge your friends.' 
                                     : 'Deep AI review for complexity, bugs, and interview readiness.'}
@@ -813,11 +945,11 @@ function AnalysePage({ isDaily = false }) {
                         
                         <div className="mt-6 grid gap-4 md:grid-cols-[180px_minmax(0,1fr)]">
                             <label className="space-y-2">
-                                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b949e]">Language</span>
+                                <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#91A8C3]">Language</span>
                                 <select
                                     value={language}
                                     onChange={(event) => setLanguage(event.target.value)}
-                                    className="w-full rounded-xl border border-[#30363d] bg-[#161b22] px-4 py-3 text-sm text-[#e6edf3] outline-none transition focus:border-[#79c0ff]"
+                                    className="ax-select w-full rounded-xl px-4 py-3 text-sm outline-none"
                                 >
                                     {LANGUAGE_CHOICES.map((option) => (
                                         <option key={option.value} value={option.value}>{option.label}</option>
@@ -825,62 +957,60 @@ function AnalysePage({ isDaily = false }) {
                                 </select>
                             </label>
                             <label className="space-y-2">
-                                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b949e]">Problem context</span>
+                                <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#91A8C3]">Problem context</span>
                                 <input
                                     value={problemContext}
                                     onChange={(event) => setProblemContext(event.target.value)}
                                     placeholder="e.g. segment tree, n <= 2x10^5, CF-style"
-                                    className="w-full rounded-xl border border-[#30363d] bg-[#161b22] px-4 py-3 text-sm text-[#e6edf3] outline-none transition focus:border-[#79c0ff]"
+                                    className="ax-input w-full rounded-xl px-4 py-3 text-sm outline-none"
                                 />
                             </label>
                         </div>
 
-                        <div className="mt-5 flex flex-wrap items-center justify-between gap-2 text-sm text-[#8b949e]">
+                        <div className="mt-5 flex flex-wrap items-center justify-between gap-2 text-sm text-[#91A8C3]">
                             <p>Lines: {lineCount} - Chars: {charCount}</p>
-                            {analysisError ? <p className="max-w-full rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300 lg:max-w-[70%]">{analysisError}</p> : null}
+                            {analysisError ? <p className="max-w-full rounded-xl border border-rose-500/25 bg-rose-500/10 px-3 py-2 text-sm text-rose-300 lg:max-w-[70%]">{analysisError}</p> : null}
                         </div>
 
-                        <div className="mt-3 min-h-[60vh] rounded-2xl border border-[#21262d] bg-[#0d1117] p-1">
+                        <div className="ax-subcard mt-3 min-h-[60vh] rounded-2xl p-1">
                             <textarea
                                 value={code}
                                 onChange={(event) => setCode(event.target.value)}
                                 placeholder="// Paste your solution here"
-                                className="h-[calc(100vh-260px)] min-h-[520px] w-full resize-none rounded-2xl border-0 bg-[#0d1117] px-4 py-4 font-mono text-sm leading-[1.7] text-[#e6edf3] outline-none"
+                                className="ax-textarea h-[calc(100vh-260px)] min-h-[520px] w-full resize-none rounded-2xl border-0 !bg-transparent px-4 py-4 font-mono text-sm leading-[1.7] outline-none"
                             />
                         </div>
                     </div>
-                    <div className="border-t border-[#21262d] px-5 py-4">
+                    <div className="border-t border-[rgba(0,212,255,0.12)] px-5 py-4">
                         <div className="flex flex-wrap items-center gap-3">
                             <button
                                 type="button"
                                 onClick={handleAnalyse}
                                 disabled={isLoading}
                                 data-cursor="button"
-                                className="rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-70"
+                                className="ax-primary-btn rounded-xl px-5 py-3 text-sm font-bold"
                             >
                                 {isLoading ? 'Analysing...' : analysis ? 'Re-analyse' : 'Analyse solution'}
                             </button>
-                            {lastAnalysedAt ? <p className="text-sm text-[#8b949e]">Last analysed {formatLastAnalysed(lastAnalysedAt)}</p> : null}
+                            {lastAnalysedAt ? <p className="text-sm text-[#91A8C3]">Last analysed {formatLastAnalysed(lastAnalysedAt)}</p> : null}
                         </div>
-                        <p className="mt-3 text-xs text-[#8b949e]">Powered by {provider} - results in ~3s</p>
+                        <p className="mt-3 text-xs text-[#6f88a8]">Powered by {provider} - results in ~3s</p>
                     </div>
                 </aside>
 
                 <main className="flex-1 overflow-y-auto px-5 py-5">
                     {isFetchingShared ? (
-                        <div className="flex h-full items-center justify-center text-sm text-[#8b949e]">Loading shared analysis...</div>
+                        <div className="flex h-full items-center justify-center text-sm text-[#91A8C3]">Loading shared analysis...</div>
                     ) : isLoading ? (
                         <div className="flex h-full flex-col items-center justify-center">
-                            <div className="relative h-2 w-full max-w-xl overflow-hidden rounded-full bg-[#161b22]">
-                                <div className="absolute inset-y-0 left-0 w-1/3 rounded-full bg-blue-500" style={{ animation: 'pulseTrack 1.1s linear infinite' }} />
-                            </div>
-                            <p className="mt-6 text-sm text-[#e6edf3]">{LOADING_STEPS[loadingStepIndex]}</p>
+                            <div className="ax-loading-scan" role="status" aria-live="polite" aria-label={LOADING_STEPS[loadingStepIndex]} />
+                            <p className="mt-6 text-sm text-[#EAF6FF]">{LOADING_STEPS[loadingStepIndex]}</p>
                         </div>
                     ) : !displayAnalysis ? (
                         <div className="flex h-full flex-col items-center justify-center text-center">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-[#21262d] bg-[#161b22] text-2xl text-[#79c0ff]">A</div>
-                            <h2 className="mt-6 text-xl font-semibold text-[#e6edf3]">Paste your solution and click Analyse.</h2>
-                            <p className="mt-2 max-w-lg text-sm text-[#8b949e]">Deep metrics - bug detection - pattern recognition - interview score</p>
+                            <div className="ax-icon-chip flex h-16 w-16 items-center justify-center rounded-2xl text-2xl">A</div>
+                            <h2 className="mt-6 text-xl font-semibold text-[#EAF6FF]">Paste your solution and click Analyse.</h2>
+                            <p className="mt-2 max-w-lg text-sm text-[#91A8C3]">Deep metrics - bug detection - pattern recognition - interview score</p>
                         </div>
                     ) : (
                         <div className="space-y-4">
@@ -890,20 +1020,20 @@ function AnalysePage({ isDaily = false }) {
                                 </Section>
                             ))}
                             <div
-                                className="rounded-xl border border-[#21262d] bg-[#161b22] p-3 opacity-0"
+                                className="ax-card rounded-xl p-3 opacity-0"
                                 style={{ animation: `fadeUp 0.45s ease ${resultSections.length * 0.1}s forwards` }}
                             >
                                 <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0d1117] text-[#79c0ff]">F</div>
+                                        <div className="ax-icon-chip flex h-10 w-10 items-center justify-center rounded-xl">F</div>
                                         <div>
-                                            <p className="text-sm font-medium text-[#e6edf3]">Analysis ready - Score {displayAnalysis.overallScore}/100 - {displayAnalysis.complexity.time} - {displayAnalysis.bugs.length} issues</p>
-                                            <p className="text-xs text-[#8b949e]">Saved as a shareable ForkSpace analysis page.</p>
+                                            <p className="text-sm font-medium text-[#EAF6FF]">Analysis ready - Score {displayAnalysis.overallScore}/100 - {displayAnalysis.complexity.time} - {displayAnalysis.bugs.length} issues</p>
+                                            <p className="text-xs text-[#91A8C3]">Saved as a shareable Axion analysis page.</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <button data-cursor="button" type="button" onClick={copyShareLink} className="rounded-lg border border-[#30363d] px-3 py-2 text-sm text-[#e6edf3] transition hover:border-[#79c0ff]">Copy link</button>
-                                        <button data-cursor="button" type="button" onClick={() => navigate('/')} className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-500">Open in ForkSpace</button>
+                                        <button data-cursor="button" type="button" onClick={copyShareLink} className="ax-ghost-btn rounded-lg px-3 py-2 text-sm">Copy link</button>
+                                        <button data-cursor="button" type="button" onClick={() => navigate('/')} className="ax-primary-btn rounded-lg px-3 py-2 text-sm font-semibold">Open in Axion</button>
                                     </div>
                                 </div>
                             </div>
@@ -913,27 +1043,27 @@ function AnalysePage({ isDaily = false }) {
                                     {isDbConnected && (
                                         <button
                                             onClick={() => setIsLeaderboardOpen(true)}
-                                            className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10"
+                                            className="ax-action-tile flex flex-col items-center justify-center gap-2 rounded-2xl p-4"
                                         >
                                             <span className="text-2xl">📊</span>
-                                            <span className="text-sm font-bold text-white uppercase tracking-wider">View Leaderboard</span>
+                                            <span className="text-sm font-bold uppercase tracking-wider text-[#00D4FF]">View Leaderboard</span>
                                         </button>
                                     )}
                                     {isDbConnected && (
                                         <button
                                             onClick={handleChallengeFriend}
-                                            className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 transition hover:bg-amber-500/10"
+                                            className="ax-action-tile ax-action-tile-purple flex flex-col items-center justify-center gap-2 rounded-2xl p-4"
                                         >
                                             <span className="text-2xl">🏆</span>
-                                            <span className="text-sm font-bold text-amber-500 uppercase tracking-wider">Challenge a Friend</span>
+                                            <span className="text-sm font-bold uppercase tracking-wider text-[#c9baff]">Challenge a Friend</span>
                                         </button>
                                     )}
                                     <button
                                         onClick={handleShareScore}
-                                        className={`flex flex-col items-center justify-center gap-2 rounded-2xl border border-blue-500/30 bg-blue-500/5 p-4 transition hover:bg-blue-500/10 ${!isDbConnected ? 'col-span-3' : ''}`}
+                                        className={`ax-action-tile ax-action-tile-cyan flex flex-col items-center justify-center gap-2 rounded-2xl p-4 ${!isDbConnected ? 'col-span-3' : ''}`}
                                     >
                                         <span className="text-2xl">📤</span>
-                                        <span className="text-sm font-bold text-blue-400 uppercase tracking-wider">Share Score</span>
+                                        <span className="text-sm font-bold uppercase tracking-wider text-[#00F5FF]">Share Score</span>
                                     </button>
                                 </div>
                             )}
@@ -957,17 +1087,17 @@ function AnalysePage({ isDaily = false }) {
 
             {challengeModal?.open && (
                 <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-                    <div className="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-amber-500/30 bg-[#0d1117] p-8 text-center shadow-2xl">
-                        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-amber-500 text-black shadow-[0_0_30px_rgba(245,158,11,0.3)]">
+                    <div className="ax-modal relative w-full max-w-md overflow-hidden rounded-[2rem] p-8 text-center">
+                        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl text-[#0b1426]" style={{ background: 'linear-gradient(135deg, #00D4FF, #7C5CFF)', boxShadow: '0 0 30px rgba(0,212,255,0.4)' }}>
                             <Sparkles size={40} />
                         </div>
                         <h2 className="text-2xl font-bold text-white">Challenge Created!</h2>
-                        <p className="mt-2 text-gray-400">Your score: <span className="font-bold text-amber-500">{challengeModal.score}/100</span></p>
+                        <p className="mt-2 text-[#91A8C3]">Your score: <span className="font-bold text-[#00D4FF]">{challengeModal.score}/100</span></p>
                         
                         <div className="mt-8 space-y-4">
-                            <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                                <p className="text-xs font-bold uppercase tracking-widest text-gray-500">Challenge URL</p>
-                                <p className="mt-1 truncate text-sm font-mono text-gray-300">{challengeModal.challengeUrl}</p>
+                            <div className="ax-subcard rounded-xl p-3">
+                                <p className="text-xs font-bold uppercase tracking-widest text-[#6f88a8]">Challenge URL</p>
+                                <p className="mt-1 truncate text-sm font-mono text-[#cfeaff]">{challengeModal.challengeUrl}</p>
                             </div>
                             
                             <button
@@ -975,7 +1105,7 @@ function AnalysePage({ isDaily = false }) {
                                     navigator.clipboard.writeText(challengeModal.challengeUrl);
                                     toast.success('Link copied!');
                                 }}
-                                className="w-full rounded-xl bg-white px-6 py-3 font-bold text-black transition hover:bg-gray-200"
+                                className="ax-primary-btn w-full rounded-xl px-6 py-3 font-bold"
                             >
                                 Copy Link
                             </button>
@@ -991,7 +1121,7 @@ function AnalysePage({ isDaily = false }) {
                             
                             <button
                                 onClick={() => setChallengeModal(null)}
-                                className="w-full rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-bold text-white transition hover:bg-white/10"
+                                className="ax-ghost-btn w-full rounded-xl px-6 py-3 font-bold"
                             >
                                 Close
                             </button>

@@ -33,7 +33,7 @@ const ChallengePage = () => {
 
   const handleAttemptSubmit = async (score) => {
     try {
-      const name = localStorage.getItem('forkspace-username') || 'Anonymous';
+      const name = localStorage.getItem('Axion-username') || 'Anonymous';
       const response = await axios.post(`${serverUrl}/api/challenge/${id}/attempt`, {
         name,
         score

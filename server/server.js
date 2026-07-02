@@ -87,7 +87,7 @@ if (redisUrl) {
 
 // Connect to MongoDB
 const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://localhost:27017/forkspace";
+  process.env.MONGODB_URI || "mongodb://localhost:27017/Axion";
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
@@ -112,7 +112,7 @@ function buildUserPayload(user) {
     name: user.name,
     email: user.email,
     avatarId: user.avatarId,
-    forkspaceRating: user.forkspaceRating ?? 1000,
+    AxionRating: user.AxionRating ?? 1000,
     totalSessions: user.totalSessions ?? 0,
     problemsAttempted: user.problemsAttempted ?? 0,
     currentStreak: user.currentStreak ?? 0,
@@ -230,7 +230,7 @@ app.get("/health", (_req, res) => {
 
 app.get("/", (_req, res) => {
   res.status(200).json({
-    service: "ForkSpace API",
+    service: "Axion API",
     ok: true,
     message: "Backend is running. Use the frontend app to access UI.",
     health: "/health",
@@ -392,19 +392,19 @@ const SUPPORTED_LANGUAGES = {
     id: 54,
     label: "C++",
     starterCode:
-      '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    cout << "Hello, ForkSpace!";\n    return 0;\n}\n',
+      '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    cout << "Hello, Axion!";\n    return 0;\n}\n',
   },
   javascript: {
     id: 63,
     label: "JavaScript",
     starterCode:
-      'function main() {\n  console.log("Hello, ForkSpace!");\n}\n\nmain();\n',
+      'function main() {\n  console.log("Hello, Axion!");\n}\n\nmain();\n',
   },
   python: {
     id: 71,
     label: "Python",
     starterCode:
-      'def main():\n    print("Hello, ForkSpace!")\n\n\nif __name__ == "__main__":\n    main()\n',
+      'def main():\n    print("Hello, Axion!")\n\n\nif __name__ == "__main__":\n    main()\n',
   },
 };
 
@@ -829,13 +829,13 @@ function buildFallbackHint(prompt = "", suffix = "") {
       return "\n    return 0;";
     }
 
-    if (prompt.trim().endsWith('cout << "Hello, ForkSpace!"')) {
+    if (prompt.trim().endsWith('cout << "Hello, Axion!"')) {
       return " << endl;";
     }
   }
 
   if (language === "javascript") {
-    if (prompt.trim().endsWith('console.log("Hello, ForkSpace!")')) {
+    if (prompt.trim().endsWith('console.log("Hello, Axion!")')) {
       return ";";
     }
 
@@ -1585,7 +1585,7 @@ async function importCodeforcesProblem(problemCode, sourceUrl = "") {
       const response = await axios.get(candidateUrl, {
         timeout: 12000,
         headers: {
-          "User-Agent": "Mozilla/5.0 ForkSpace Problem Importer",
+          "User-Agent": "Mozilla/5.0 Axion Problem Importer",
           "Accept-Language": "en-US,en;q=0.9",
         },
       });
@@ -1655,7 +1655,7 @@ async function resolveLeetCodeSlug(problemCode = "") {
 
   const response = await axios.get("https://leetcode.com/api/problems/all/", {
     headers: {
-      "User-Agent": "Mozilla/5.0 ForkSpace Problem Importer",
+      "User-Agent": "Mozilla/5.0 Axion Problem Importer",
       "Accept-Language": "en-US,en;q=0.9",
     },
   });
@@ -1696,7 +1696,7 @@ async function importLeetCodeProblem(problemCode, sourceUrl = "") {
       headers: {
         "Content-Type": "application/json",
         Referer: nextSourceUrl,
-        "User-Agent": "Mozilla/5.0 ForkSpace Problem Importer",
+        "User-Agent": "Mozilla/5.0 Axion Problem Importer",
       },
     },
   );
@@ -2804,9 +2804,9 @@ app.post("/api/session-intelligence/report", async (req, res) => {
         ? 10
         : 0;
     const cfBonus = cfProblemRating >= 1600 ? 25 : 0;
-    user.forkspaceRating = clampNumber(
+    user.AxionRating = clampNumber(
       Math.round(
-        (user.forkspaceRating || 1000) +
+        (user.AxionRating || 1000) +
           (solvedScore - 60) * 1.5 +
           cfBonus +
           timeBonus,

@@ -11,10 +11,10 @@ const defaultFilters = {
     search: '',
 };
 
-const inputClass =
-    'w-full rounded-xl border border-stone-200 bg-white px-3.5 py-3 text-sm text-stone-900 shadow-sm outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:focus:border-amber-500/60 dark:focus:ring-amber-500/20';
+// Axion UI: neon-blue glass inputs with cyan focus rings
+const inputClass = 'cfp-input w-full rounded-xl px-4 py-3 text-sm outline-none transition-all duration-200';
 
-const labelClass = 'text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-600 dark:text-slate-400';
+const labelClass = 'text-[11px] font-bold uppercase tracking-[0.15em] text-[#6f88a8]';
 
 /**
  * Large modal to browse Codeforces problems from the server catalog (cached API).
@@ -85,27 +85,133 @@ function CodeforcesProblemPicker({ isOpen, onClose, onSelect, serverUrl }) {
     };
 
     return (
-        <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-slate-950/65 p-3 backdrop-blur-md sm:p-4">
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-[rgba(6,10,20,0.78)] p-3 backdrop-blur-sm sm:p-4 transition-opacity">
+            <style>{`
+                .cfp-shell {
+                    background:
+                        radial-gradient(120% 120% at 0% 0%, rgba(0,212,255,0.08), transparent 55%),
+                        radial-gradient(90% 100% at 100% 100%, rgba(124,92,255,0.08), transparent 50%),
+                        linear-gradient(180deg, rgba(21,37,68,0.92), rgba(12,20,38,0.98));
+                    border: 1px solid rgba(0,212,255,0.22);
+                    box-shadow: 0 30px 90px -30px rgba(0,212,255,0.3);
+                    backdrop-filter: blur(16px);
+                    -webkit-backdrop-filter: blur(16px);
+                }
+                .cfp-close-btn {
+                    border: 1px solid rgba(0,212,255,0.2);
+                    background: rgba(9,14,26,0.6);
+                    color: #91A8C3;
+                    transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+                }
+                .cfp-close-btn:hover { border-color: rgba(0,212,255,0.5); color: #EAF6FF; background: rgba(0,212,255,0.08); }
+                .cfp-close-btn:focus-visible { outline: 2px solid #00F5FF; outline-offset: 2px; }
+                .cfp-warning {
+                    border: 1px solid rgba(255,92,138,0.35);
+                    background: rgba(255,92,138,0.1);
+                    color: #ff9db8;
+                }
+                .cfp-search-bar {
+                    background: rgba(9,14,26,0.85);
+                    border-bottom: 1px solid rgba(0,212,255,0.14);
+                    backdrop-filter: blur(10px);
+                }
+                .cfp-expand-btn {
+                    border: 1px solid rgba(0,212,255,0.2);
+                    background: rgba(9,14,26,0.6);
+                    color: #cfeaff;
+                    transition: border-color 160ms ease, background 160ms ease;
+                }
+                .cfp-expand-btn:hover { border-color: rgba(0,212,255,0.5); background: rgba(0,212,255,0.08); }
+                .cfp-group-card {
+                    border: 1px solid rgba(0,212,255,0.12);
+                    background: rgba(9,14,26,0.5);
+                }
+                .cfp-group-card-accent {
+                    border: 1px solid rgba(0,212,255,0.28);
+                    background: rgba(0,212,255,0.06);
+                }
+                .cfp-input {
+                    background: rgba(6,10,20,0.7);
+                    border: 1px solid rgba(0,212,255,0.18);
+                    color: #EAF6FF;
+                }
+                .cfp-input::placeholder { color: #4d6584; }
+                .cfp-input:focus {
+                    border-color: rgba(0,212,255,0.55);
+                    box-shadow: 0 0 0 3px rgba(0,212,255,0.14);
+                    background: rgba(6,10,20,0.9);
+                }
+                .cfp-submit-btn {
+                    background: linear-gradient(135deg, #1E90FF, #00B8E6);
+                    color: white;
+                    box-shadow: 0 0 0 1px rgba(0,212,255,0.4) inset, 0 8px 22px -10px rgba(0,212,255,0.6);
+                    transition: transform 180ms ease, filter 180ms ease;
+                }
+                .cfp-submit-btn:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.08); }
+                .cfp-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+                .cfp-reset-btn {
+                    border: 1px solid rgba(0,212,255,0.2);
+                    background: rgba(9,14,26,0.6);
+                    color: #cfeaff;
+                    transition: border-color 160ms ease, background 160ms ease;
+                }
+                .cfp-reset-btn:hover { border-color: rgba(0,212,255,0.5); background: rgba(0,212,255,0.08); }
+                .cfp-card {
+                    border: 1px solid rgba(0,212,255,0.14);
+                    background: rgba(18,34,66,0.55);
+                    transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+                }
+                .cfp-card:hover, .cfp-card:focus-visible {
+                    transform: translateY(-2px);
+                    border-color: rgba(0,212,255,0.5);
+                    box-shadow: 0 14px 36px -18px rgba(0,212,255,0.35);
+                }
+                .cfp-card:focus-visible { outline: 2px solid #00F5FF; outline-offset: 2px; }
+                .cfp-pill-rated {
+                    background: rgba(0,212,255,0.1);
+                    border: 1px solid rgba(0,212,255,0.3);
+                    color: #9fe8ff;
+                }
+                .cfp-pill-unrated {
+                    background: rgba(9,14,26,0.7);
+                    border: 1px solid rgba(0,212,255,0.14);
+                    color: #91A8C3;
+                }
+                .cfp-tag {
+                    background: rgba(9,14,26,0.7);
+                    border: 1px solid rgba(0,212,255,0.12);
+                    color: #91A8C3;
+                }
+                .cfp-load-more {
+                    border: 1px solid rgba(0,212,255,0.22);
+                    background: rgba(9,14,26,0.6);
+                    color: #cfeaff;
+                    transition: border-color 160ms ease, background 160ms ease;
+                }
+                .cfp-load-more:hover:not(:disabled) { border-color: rgba(0,212,255,0.5); background: rgba(0,212,255,0.08); }
+            `}</style>
             <div
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="cf-picker-title"
-                className="flex h-[74vh] w-full max-w-[1040px] flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-[0_28px_100px_-28px_rgba(15,23,42,0.55)] ring-1 ring-black/5 dark:border-slate-700/90 dark:bg-[#060d18] dark:shadow-[0_36px_120px_-36px_rgba(0,0,0,0.9)] dark:ring-white/5"
+                className="cfp-shell flex h-[78vh] w-full max-w-[1040px] flex-col overflow-hidden rounded-2xl"
             >
-                <div className="flex shrink-0 items-start justify-between gap-4 border-b border-stone-200/90 px-5 py-2.5 sm:px-6 dark:border-slate-700/80">
+                <div className="flex shrink-0 items-start justify-between gap-4 border-b border-[rgba(0,212,255,0.14)] px-6 py-4">
                     <div className="min-w-0">
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-600 dark:text-amber-400">
-                            Codeforces catalog
+                        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#00D4FF]" style={{ textShadow: '0 0 10px rgba(0,212,255,0.4)' }}>
+                            Problem Database
                         </p>
-                        <h3 id="cf-picker-title" className="mt-0.5 text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                            Pick a problem
+                        <h3 id="cf-picker-title" className="mt-1 text-2xl font-bold tracking-tight text-[#EAF6FF]">
+                            Select Challenge
                         </h3>
-                        <p className="mt-0.5 max-w-2xl text-[11px] leading-relaxed text-slate-600 dark:text-slate-400">Select a row to apply to the room.</p>
+                        <p className="mt-1 max-w-2xl text-xs text-[#91A8C3]">
+                            Search the Codeforces catalog to import into your workspace.
+                        </p>
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-stone-200 bg-white text-stone-600 transition hover:border-stone-300 hover:bg-stone-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+                        className="cfp-close-btn inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
                         aria-label="Close"
                     >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,189 +222,194 @@ function CodeforcesProblemPicker({ isOpen, onClose, onSelect, serverUrl }) {
 
                 <div className="min-h-0 flex-1 overflow-y-auto scroll-smooth overscroll-contain">
                     {warning && (
-                        <div className="mx-6 mt-4 rounded-xl border border-amber-200 bg-amber-50/95 px-4 py-3 text-sm text-amber-950 dark:border-amber-800/50 dark:bg-amber-950/35 dark:text-amber-100 sm:mx-8">
+                        <div className="cfp-warning mx-6 mt-5 rounded-xl px-4 py-3 text-sm font-medium sm:mx-8">
                             {warning}
                         </div>
                     )}
 
-                    <div className="sticky top-0 z-20 border-b border-stone-200/90 bg-white/95 px-5 py-2 shadow-[0_10px_30px_-18px_rgba(15,23,42,0.25)] backdrop-blur-md dark:border-slate-700/80 dark:bg-[#060d18]/95 sm:px-6">
-                        <form onSubmit={handleSearch} className="space-y-3">
+                    <div className="cfp-search-bar sticky top-0 z-20 px-5 py-3 sm:px-6">
+                        <form onSubmit={handleSearch} className="space-y-4">
                             <div className="flex flex-wrap items-center justify-between gap-2">
-                                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400">Filters</p>
+                                <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#6f88a8]">
+                                    Search & Filters
+                                </p>
                                 <button
                                     type="button"
                                     onClick={() => setShowFilters((v) => !v)}
-                                    className="rounded-lg border border-stone-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
+                                    className="cfp-expand-btn rounded-lg px-3 py-1.5 text-xs font-semibold"
                                 >
                                     {showFilters ? "Collapse" : "Expand"}
                                 </button>
                             </div>
                             {showFilters ? (
                                 <>
-                            <div className="rounded-2xl border border-stone-200/90 bg-stone-50/90 p-5 dark:border-slate-700/80 dark:bg-slate-900/40">
-                                <p className={`${labelClass} mb-4 text-stone-700 dark:text-slate-300`}>Search & tags</p>
-                                <div className="space-y-4">
-                                    <label className="block space-y-2">
-                                        <span className={labelClass}>Tags (comma-separated, AND)</span>
-                                        <input
-                                            id="cf-tags"
-                                            name="tags"
-                                            value={filters.tags}
-                                            onChange={(e) => setFilters((f) => ({ ...f, tags: e.target.value }))}
-                                            placeholder="e.g. dp, greedy"
-                                            className={inputClass}
-                                        />
-                                    </label>
-                                    <label className="block space-y-2">
-                                        <span className={labelClass}>Search by title or problem id</span>
-                                        <input
-                                            id="cf-search"
-                                            name="search"
-                                            value={filters.search}
-                                            onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
-                                            placeholder="e.g. 1885 or xor"
-                                            className={inputClass}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
+                                    <div className="cfp-group-card rounded-xl p-5">
+                                        <p className={`${labelClass} mb-4 text-[#cfeaff]`}>General Search</p>
+                                        <div className="space-y-4">
+                                            <label className="block space-y-2">
+                                                <span className={labelClass}>Tags (comma-separated, AND)</span>
+                                                <input
+                                                    id="cf-tags"
+                                                    name="tags"
+                                                    value={filters.tags}
+                                                    onChange={(e) => setFilters((f) => ({ ...f, tags: e.target.value }))}
+                                                    placeholder="e.g. dp, greedy, bitmasks"
+                                                    className={inputClass}
+                                                />
+                                            </label>
+                                            <label className="block space-y-2">
+                                                <span className={labelClass}>Search by Title or Problem ID</span>
+                                                <input
+                                                    id="cf-search"
+                                                    name="search"
+                                                    value={filters.search}
+                                                    onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
+                                                    placeholder="e.g. 1885 or xor"
+                                                    className={inputClass}
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
 
-                            <div className="rounded-2xl border border-amber-200/80 bg-amber-50/50 p-5 dark:border-amber-900/40 dark:bg-amber-950/20">
-                                <p className={`${labelClass} mb-4 text-amber-900 dark:text-amber-200`}>Rating range</p>
-                                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                                    <label className="block space-y-2">
-                                        <span className={labelClass}>Minimum rating</span>
-                                        <input
-                                            type="number"
-                                            id="cf-min-rating"
-                                            name="minRating"
-                                            value={filters.minRating}
-                                            onChange={(e) => setFilters((f) => ({ ...f, minRating: e.target.value }))}
-                                            placeholder="800"
-                                            className={inputClass}
-                                        />
-                                    </label>
-                                    <label className="block space-y-2">
-                                        <span className={labelClass}>Maximum rating</span>
-                                        <input
-                                            type="number"
-                                            id="cf-max-rating"
-                                            name="maxRating"
-                                            value={filters.maxRating}
-                                            onChange={(e) => setFilters((f) => ({ ...f, maxRating: e.target.value }))}
-                                            placeholder="2000"
-                                            className={inputClass}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
+                                    <div className="cfp-group-card-accent rounded-xl p-5">
+                                        <p className={`${labelClass} mb-4 text-[#00D4FF]`}>Difficulty Rating</p>
+                                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                            <label className="block space-y-2">
+                                                <span className={labelClass}>Minimum Rating</span>
+                                                <input
+                                                    type="number"
+                                                    id="cf-min-rating"
+                                                    name="minRating"
+                                                    value={filters.minRating}
+                                                    onChange={(e) => setFilters((f) => ({ ...f, minRating: e.target.value }))}
+                                                    placeholder="800"
+                                                    className={inputClass}
+                                                />
+                                            </label>
+                                            <label className="block space-y-2">
+                                                <span className={labelClass}>Maximum Rating</span>
+                                                <input
+                                                    type="number"
+                                                    id="cf-max-rating"
+                                                    name="maxRating"
+                                                    value={filters.maxRating}
+                                                    onChange={(e) => setFilters((f) => ({ ...f, maxRating: e.target.value }))}
+                                                    placeholder="2000"
+                                                    className={inputClass}
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
 
-                            <div className="rounded-2xl border border-slate-200/90 bg-slate-50/80 p-5 dark:border-slate-700/80 dark:bg-slate-900/35">
-                                <p className={`${labelClass} mb-4 text-slate-700 dark:text-slate-300`}>Solves range</p>
-                                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                                    <label className="block space-y-2">
-                                        <span className={labelClass}>Minimum solves</span>
-                                        <input
-                                            type="number"
-                                            id="cf-min-solved"
-                                            name="minSolved"
-                                            value={filters.minSolved}
-                                            onChange={(e) => setFilters((f) => ({ ...f, minSolved: e.target.value }))}
-                                            placeholder="0"
-                                            className={inputClass}
-                                        />
-                                    </label>
-                                    <label className="block space-y-2">
-                                        <span className={labelClass}>Maximum solves</span>
-                                        <input
-                                            type="number"
-                                            id="cf-max-solved"
-                                            name="maxSolved"
-                                            value={filters.maxSolved}
-                                            onChange={(e) => setFilters((f) => ({ ...f, maxSolved: e.target.value }))}
-                                            placeholder="Optional cap"
-                                            className={inputClass}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
+                                    <div className="cfp-group-card rounded-xl p-5">
+                                        <p className={`${labelClass} mb-4 text-[#cfeaff]`}>Solve Count</p>
+                                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                            <label className="block space-y-2">
+                                                <span className={labelClass}>Minimum Solves</span>
+                                                <input
+                                                    type="number"
+                                                    id="cf-min-solved"
+                                                    name="minSolved"
+                                                    value={filters.minSolved}
+                                                    onChange={(e) => setFilters((f) => ({ ...f, minSolved: e.target.value }))}
+                                                    placeholder="0"
+                                                    className={inputClass}
+                                                />
+                                            </label>
+                                            <label className="block space-y-2">
+                                                <span className={labelClass}>Maximum Solves</span>
+                                                <input
+                                                    type="number"
+                                                    id="cf-max-solved"
+                                                    name="maxSolved"
+                                                    value={filters.maxSolved}
+                                                    onChange={(e) => setFilters((f) => ({ ...f, maxSolved: e.target.value }))}
+                                                    placeholder="Optional cap"
+                                                    className={inputClass}
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
 
-                            <div className="flex flex-wrap gap-3 pt-1">
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="min-h-[44px] rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-slate-800 disabled:opacity-60 dark:bg-amber-500 dark:text-slate-950 dark:hover:bg-amber-400"
-                                >
-                                    {loading ? 'Loading…' : 'Apply filters'}
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setFilters(defaultFilters);
-                                        fetchWithFilters(0, false, defaultFilters);
-                                    }}
-                                    className="min-h-[44px] rounded-xl border-2 border-stone-200 bg-white px-6 py-2.5 text-sm font-bold text-slate-800 transition hover:bg-stone-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
-                                >
-                                    Reset
-                                </button>
-                            </div>
+                                    <div className="flex flex-wrap gap-3 pt-2">
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className="cfp-submit-btn min-h-[44px] rounded-xl px-6 py-2.5 text-sm font-bold"
+                                        >
+                                            {loading ? 'Loading…' : 'Apply Filters'}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setFilters(defaultFilters);
+                                                fetchWithFilters(0, false, defaultFilters);
+                                            }}
+                                            className="cfp-reset-btn min-h-[44px] rounded-xl px-6 py-2.5 text-sm font-bold"
+                                        >
+                                            Reset
+                                        </button>
+                                    </div>
                                 </>
                             ) : null}
                         </form>
                     </div>
 
-                    <div className="px-5 py-4 sm:px-6 sm:py-5">
-                        <div className="mb-5 flex flex-wrap items-end justify-between gap-3 border-b border-stone-200/80 pb-4 dark:border-slate-700/60">
-                            <p className="text-base font-semibold text-slate-800 dark:text-slate-100">
-                                <span className="tabular-nums text-lg text-slate-900 dark:text-white">{rows.length}</span>
-                                <span className="text-slate-500 dark:text-slate-500"> of </span>
-                                <span className="tabular-nums text-lg text-slate-900 dark:text-white">{total}</span>
-                                <span className="font-normal text-slate-500 dark:text-slate-400"> matches</span>
-                            </p>
-                            <p className="text-xs font-medium uppercase tracking-[0.12em] text-slate-500 dark:text-slate-500">
-                                Click a row to select
+                    <div className="px-5 py-6 sm:px-6">
+                        <div className="mb-6 flex flex-wrap items-end justify-between gap-3 border-b border-[rgba(0,212,255,0.14)] pb-4">
+                            <p className="text-sm font-medium text-[#91A8C3]">
+                                Showing <span className="font-bold text-[#EAF6FF]">{rows.length}</span> of{' '}
+                                <span className="font-bold text-[#EAF6FF]">{total}</span> results
                             </p>
                         </div>
 
-                        <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                        <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                             {rows.map((row) => (
                                 <li key={row.internalProblemId}>
                                     <button
                                         type="button"
                                         onClick={() => onSelect(row.internalProblemId)}
-                                        className="group flex h-full w-full flex-col rounded-2xl border border-stone-200/90 bg-stone-50/90 px-5 py-4 text-left shadow-sm transition hover:border-amber-400/90 hover:bg-white hover:shadow-lg dark:border-slate-700/90 dark:bg-[#0c1629] dark:hover:border-amber-500/50 dark:hover:bg-[#101f38]"
+                                        className="cfp-card group flex h-full w-full flex-col rounded-xl px-5 py-5 text-left"
                                     >
-                                        <div className="flex flex-wrap items-start justify-between gap-3">
-                                            <span className="font-mono text-base font-bold tracking-tight text-slate-900 dark:text-white">
+                                        <div className="flex flex-wrap items-start justify-between gap-3 w-full">
+                                            <span className="font-mono text-sm font-bold tracking-tight text-[#EAF6FF]">
                                                 {row.internalProblemId}
                                             </span>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 {row.rating != null ? (
-                                                    <span className="rounded-lg bg-amber-100 px-2.5 py-1 text-xs font-bold tabular-nums text-amber-950 dark:bg-amber-500/25 dark:text-amber-100">
-                                                        {row.rating}
+                                                    <span className="cfp-pill-rated rounded-md px-2 py-0.5 text-[11px] font-bold tabular-nums">
+                                                        Rating: {row.rating}
                                                     </span>
                                                 ) : (
-                                                    <span className="rounded-lg bg-slate-200/80 px-2.5 py-1 text-xs font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-300">
+                                                    <span className="cfp-pill-unrated rounded-md px-2 py-0.5 text-[11px] font-semibold">
                                                         Unrated
                                                     </span>
                                                 )}
-                                                <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                                                    {row.solvedCount.toLocaleString()} solves
-                                                </span>
                                             </div>
                                         </div>
-                                        <p className="mt-3 line-clamp-2 text-[15px] font-semibold leading-snug text-slate-900 dark:text-slate-50">
+                                        <p className="mt-2.5 line-clamp-2 text-base font-bold leading-tight text-[#EAF6FF] transition-colors group-hover:text-[#00D4FF]">
                                             {row.title}
                                         </p>
-                                        <div className="mt-3 flex flex-wrap gap-1.5">
-                                            {(row.tags || []).slice(0, 8).map((t) => (
-                                                <span
-                                                    key={t}
-                                                    className="rounded-md bg-white px-2 py-1 text-[11px] font-medium text-slate-700 ring-1 ring-stone-200/90 dark:bg-slate-900 dark:text-slate-300 dark:ring-slate-600"
-                                                >
-                                                    {t}
-                                                </span>
-                                            ))}
+
+                                        <div className="mt-4 flex w-full items-end justify-between gap-4 mt-auto pt-2">
+                                            <div className="flex flex-wrap gap-1.5 flex-1">
+                                                {(row.tags || []).slice(0, 4).map((t) => (
+                                                    <span
+                                                        key={t}
+                                                        className="cfp-tag rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider"
+                                                    >
+                                                        {t}
+                                                    </span>
+                                                ))}
+                                                {(row.tags || []).length > 4 && (
+                                                    <span className="text-[10px] font-medium text-[#5b7799] flex items-center">
+                                                        +{row.tags.length - 4} more
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span className="text-[11px] font-semibold text-[#5b7799] whitespace-nowrap">
+                                                {row.solvedCount.toLocaleString()} solves
+                                            </span>
                                         </div>
                                     </button>
                                 </li>
@@ -306,20 +417,22 @@ function CodeforcesProblemPicker({ isOpen, onClose, onSelect, serverUrl }) {
                         </ul>
 
                         {rows.length === 0 && !loading && (
-                            <p className="py-20 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
-                                No problems match. Relax filters or try again later.
-                            </p>
+                            <div className="py-24 text-center">
+                                <p className="text-sm font-medium text-[#91A8C3]">
+                                    No challenges found. Try adjusting your filters.
+                                </p>
+                            </div>
                         )}
 
                         {rows.length < total && (
-                            <div className="mt-8 flex justify-center pb-4">
+                            <div className="mt-10 flex justify-center pb-6">
                                 <button
                                     type="button"
                                     onClick={loadMore}
                                     disabled={loading}
-                                    className="rounded-xl border-2 border-stone-200 bg-white px-8 py-3 text-sm font-bold text-slate-800 shadow-sm transition hover:bg-stone-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+                                    className="cfp-load-more rounded-xl px-8 py-2.5 text-sm font-bold disabled:opacity-50"
                                 >
-                                    {loading ? 'Loading…' : 'Load more'}
+                                    {loading ? 'Loading…' : 'Load More'}
                                 </button>
                             </div>
                         )}

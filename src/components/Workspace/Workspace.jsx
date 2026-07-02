@@ -48,26 +48,26 @@ function codeMatchesLanguageStarter(raw, languageKey) {
 
 function OutputSection({ tone, title, children }) {
     const toneClasses = {
-        success: "border-green-200 bg-green-50 text-green-900 dark:border-green-800/50 dark:bg-green-950/30 dark:text-green-100",
-        error: "border-red-200 bg-red-50 text-red-900 dark:border-red-800/50 dark:bg-red-950/30 dark:text-red-100",
-        warning: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-100",
-        info: "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800/50 dark:bg-blue-950/30 dark:text-blue-100",
+        success: "border-cyan-400/30 bg-cyan-400/[0.06] text-cyan-50 shadow-[0_0_24px_-12px_rgba(0,245,255,0.6)]",
+        error: "border-rose-400/30 bg-rose-400/[0.07] text-rose-50 shadow-[0_0_24px_-12px_rgba(255,80,110,0.5)]",
+        warning: "border-[#7C5CFF]/35 bg-[#7C5CFF]/[0.08] text-violet-50 shadow-[0_0_24px_-12px_rgba(124,92,255,0.5)]",
+        info: "border-[#1E90FF]/35 bg-[#1E90FF]/[0.08] text-sky-50 shadow-[0_0_24px_-12px_rgba(30,144,255,0.5)]",
     };
 
     const dotClasses = {
-        success: "bg-green-500",
-        error: "bg-red-500",
-        warning: "bg-amber-500",
-        info: "bg-blue-500",
+        success: "bg-cyan-300 shadow-[0_0_8px_2px_rgba(0,245,255,0.7)]",
+        error: "bg-rose-400 shadow-[0_0_8px_2px_rgba(255,80,110,0.6)]",
+        warning: "bg-[#a78bfa] shadow-[0_0_8px_2px_rgba(124,92,255,0.6)]",
+        info: "bg-[#38bdf8] shadow-[0_0_8px_2px_rgba(30,144,255,0.6)]",
     };
 
     return (
-        <div className={`rounded-lg border p-4 ${toneClasses[tone]}`}>
+        <div className={`rounded-2xl border backdrop-blur-md p-4 ${toneClasses[tone]}`}>
             <div className="mb-2 flex items-center gap-2">
                 <div className={`h-2 w-2 rounded-full ${dotClasses[tone]}`}></div>
-                <span className="font-medium">{title}</span>
+                <span className="font-medium tracking-wide">{title}</span>
             </div>
-            <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed">{children}</pre>
+            <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-[#EAF6FF]/90">{children}</pre>
         </div>
     );
 }
@@ -94,17 +94,17 @@ function ProgressiveSampleSuiteResults({ allPass, summary, results = [] }) {
                 return (
                     <div
                         key={r.id || r.index}
-                        className={`rounded-lg border p-3 opacity-0 ${passed ? "border-green-300/50" : "border-red-300/40"} ${passed ? "workspace-sample-pass" : "workspace-sample-fail"}`}
+                        className={`rounded-2xl border p-3 opacity-0 backdrop-blur-md ${passed ? "border-cyan-400/25 bg-cyan-400/[0.04]" : "border-rose-400/25 bg-rose-400/[0.05]"} ${passed ? "workspace-sample-pass" : "workspace-sample-fail"}`}
                         style={{
                             animation: `sampleReveal 150ms ease ${index * 10}ms forwards, ${passed ? "samplePassFlash" : "sampleFailFlash"} 400ms ease forwards`,
                         }}
                     >
-                        <p className="font-semibold text-gray-900 dark:text-white">Test {r.index}{passed ? " ✓" : " ✗"}</p>
+                        <p className="font-semibold text-[#EAF6FF]">Test {r.index}{passed ? " ✓" : " ✗"}</p>
                         {r.compile_output ? (
-                            <pre className="mt-2 whitespace-pre-wrap font-mono text-xs text-gray-800 dark:text-gray-200">{r.compile_output}</pre>
+                            <pre className="mt-2 whitespace-pre-wrap font-mono text-xs text-[#91A8C3]">{r.compile_output}</pre>
                         ) : null}
                         {r.stderr ? (
-                            <pre className="mt-2 whitespace-pre-wrap font-mono text-xs text-red-700 dark:text-red-300">{r.stderr}</pre>
+                            <pre className="mt-2 whitespace-pre-wrap font-mono text-xs text-rose-300">{r.stderr}</pre>
                         ) : null}
                         {!passed && !r.compile_output && !r.stderr ? (
                             <div className="mt-2">
@@ -125,7 +125,7 @@ function AIReviewBugCard({ bug, defaultOpen = false }) {
     const codeSnippet = typeof bug === "object" ? bug?.code || bug?.fix || "" : "";
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white/90 shadow-sm dark:border-gray-700 dark:bg-slate-900/70">
+        <div className="overflow-hidden rounded-2xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl shadow-[0_0_0_1px_rgba(0,212,255,0.04)]">
             <button
                 type="button"
                 onClick={() => setIsOpen((current) => !current)}
@@ -133,18 +133,18 @@ function AIReviewBugCard({ bug, defaultOpen = false }) {
             >
                 <div className="flex min-w-0 items-center gap-3">
                     <span className="text-base">🐛</span>
-                    <p className="truncate text-sm font-medium text-slate-900 dark:text-white">{title}</p>
+                    <p className="truncate text-sm font-medium text-[#EAF6FF]">{title}</p>
                 </div>
-                <span className={`text-xs text-slate-500 transition-transform ${isOpen ? "rotate-180" : ""}`}>⌄</span>
+                <span className={`text-xs text-[#91A8C3] transition-transform ${isOpen ? "rotate-180" : ""}`}>⌄</span>
             </button>
             <div
                 className="overflow-hidden transition-[max-height] duration-200 ease-out"
                 style={{ maxHeight: isOpen ? "280px" : "0px" }}
             >
-                <div className="space-y-3 border-t border-gray-200 px-4 py-3 text-sm text-slate-600 dark:border-gray-700 dark:text-slate-300">
+                <div className="space-y-3 border-t border-[rgba(0,212,255,0.12)] px-4 py-3 text-sm text-[#91A8C3]">
                     {explanation ? <p>{explanation}</p> : null}
                     {codeSnippet ? (
-                        <pre className="overflow-x-auto rounded-lg bg-slate-950 px-3 py-2 font-mono text-xs text-slate-200">{codeSnippet}</pre>
+                        <pre className="overflow-x-auto rounded-xl bg-[#050c18] px-3 py-2 font-mono text-xs text-[#00D4FF]">{codeSnippet}</pre>
                     ) : null}
                 </div>
             </div>
@@ -158,22 +158,22 @@ function AIReviewStructuredPanel({ reviewContent }) {
     const bugs = Array.isArray(reviewContent.bugs) ? reviewContent.bugs : [];
     const optimization = reviewContent.optimization_suggestion || reviewContent.optimization || null;
     const score = Number(reviewContent.overallScore || reviewContent.score || 0);
-    const bugCountTone = bugs.length > 0 ? "border-red-200 bg-red-50 text-red-700 dark:border-red-800/50 dark:bg-red-950/30 dark:text-red-300" : "border-green-200 bg-green-50 text-green-700 dark:border-green-800/50 dark:bg-green-950/30 dark:text-green-300";
-    const scoreTone = score >= 80 ? "border-green-200 bg-green-50 text-green-700 dark:border-green-800/50 dark:bg-green-950/30 dark:text-green-300" : score >= 60 ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-300" : "border-red-200 bg-red-50 text-red-700 dark:border-red-800/50 dark:bg-red-950/30 dark:text-red-300";
+    const bugCountTone = bugs.length > 0 ? "border-rose-400/30 bg-rose-400/[0.06] text-rose-200" : "border-cyan-400/30 bg-cyan-400/[0.06] text-cyan-200";
+    const scoreTone = score >= 80 ? "text-cyan-300" : score >= 60 ? "text-[#a78bfa]" : "text-rose-300";
 
     return (
         <div className="space-y-5">
             <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_12rem]">
-                <div className="rounded-2xl border border-gray-200 bg-white/90 p-4 shadow-sm dark:border-gray-700 dark:bg-slate-900/70">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Solution snapshot</p>
+                <div className="rounded-2xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4 shadow-[0_0_0_1px_rgba(0,212,255,0.04)]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#91A8C3]">Solution snapshot</p>
                     <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800/50 dark:bg-amber-950/30">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-amber-800 dark:text-amber-200">Time complexity</p>
-                            <p className="mt-2 text-xl font-bold text-amber-950 dark:text-amber-100">{reviewContent.time_complexity || "N/A"}</p>
+                        <div className="rounded-xl border border-[#7C5CFF]/30 bg-[#7C5CFF]/[0.08] px-4 py-3">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#c4b5fd]">Time complexity</p>
+                            <p className="mt-2 text-xl font-bold text-white">{reviewContent.time_complexity || "N/A"}</p>
                         </div>
-                        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 dark:border-blue-800/50 dark:bg-blue-950/30">
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-800 dark:text-blue-200">Space complexity</p>
-                            <p className="mt-2 text-xl font-bold text-blue-950 dark:text-blue-100">{reviewContent.space_complexity || "N/A"}</p>
+                        <div className="rounded-xl border border-[#1E90FF]/30 bg-[#1E90FF]/[0.08] px-4 py-3">
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#7dd3fc]">Space complexity</p>
+                            <p className="mt-2 text-xl font-bold text-white">{reviewContent.space_complexity || "N/A"}</p>
                         </div>
                         <div className={`rounded-xl border px-4 py-3 ${bugCountTone}`}>
                             <p className="text-[10px] font-semibold uppercase tracking-[0.16em]">Risk count</p>
@@ -181,16 +181,16 @@ function AIReviewStructuredPanel({ reviewContent }) {
                         </div>
                     </div>
                 </div>
-                <div className="rounded-2xl border border-gray-200 bg-white/90 p-4 text-center shadow-sm dark:border-gray-700 dark:bg-slate-900/70">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Overall score</p>
-                    <p className={`mt-3 text-4xl font-black ${scoreTone.split(" ").at(-1)}`}>{score || 74}</p>
-                    <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">out of 100</p>
+                <div className="rounded-2xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4 text-center shadow-[0_0_30px_-10px_rgba(0,212,255,0.35)]">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Overall score</p>
+                    <p className={`mt-3 text-4xl font-black ${scoreTone}`}>{score || 74}</p>
+                    <p className="mt-2 text-xs text-[#91A8C3]">out of 100</p>
                 </div>
             </div>
 
             {bugs.length > 0 ? (
                 <div className="space-y-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-600 dark:text-amber-300">Issues found</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c4b5fd]">Issues found</p>
                     {bugs.map((bug, index) => (
                         <AIReviewBugCard key={`${typeof bug === "string" ? bug : bug?.title || index}-${index}`} bug={bug} defaultOpen={index === 0} />
                     ))}
@@ -199,23 +199,23 @@ function AIReviewStructuredPanel({ reviewContent }) {
 
             {optimization && (optimization.before || optimization.after || optimization.benefit || optimization.explanation) ? (
                 <div className="space-y-3">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">Suggested improvement</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#91A8C3]">Suggested improvement</p>
                     <div className="grid gap-3 md:grid-cols-2">
-                        <div className="rounded-xl border-l-4 border-red-500 bg-white/90 p-4 shadow-sm dark:bg-slate-900/70">
-                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-red-500">Before</p>
-                            <pre className="mt-3 overflow-x-auto rounded-lg bg-slate-950 px-3 py-2 font-mono text-xs text-slate-300">{optimization.before || "No before snippet provided."}</pre>
+                        <div className="rounded-xl border-l-4 border-rose-400 bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-300">Before</p>
+                            <pre className="mt-3 overflow-x-auto rounded-lg bg-[#050c18] px-3 py-2 font-mono text-xs text-[#91A8C3]">{optimization.before || "No before snippet provided."}</pre>
                         </div>
-                        <div className="rounded-xl border-l-4 border-green-500 bg-white/90 p-4 shadow-sm dark:bg-slate-900/70">
-                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-green-500">After</p>
-                            <pre className="mt-3 overflow-x-auto rounded-lg bg-slate-950 px-3 py-2 font-mono text-xs text-green-100">{optimization.after || "No after snippet provided."}</pre>
+                        <div className="rounded-xl border-l-4 border-cyan-400 bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">After</p>
+                            <pre className="mt-3 overflow-x-auto rounded-lg bg-[#050c18] px-3 py-2 font-mono text-xs text-cyan-100">{optimization.after || "No after snippet provided."}</pre>
                         </div>
                     </div>
                 </div>
             ) : null}
 
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white/90 p-4 shadow-sm dark:border-gray-700 dark:bg-slate-900/70">
-                <p className="text-sm text-slate-700 dark:text-slate-200">{reviewContent.summary || "AI review complete."}</p>
-                <span className={`rounded-full border px-3 py-1 text-sm font-semibold ${scoreTone}`}>{`${score || 74} / 100`}</span>
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4">
+                <p className="text-sm text-[#cfe4f7]">{reviewContent.summary || "AI review complete."}</p>
+                <span className={`rounded-full border border-[rgba(0,212,255,0.3)] bg-[#00D4FF]/10 px-3 py-1 text-sm font-semibold ${scoreTone}`}>{`${score || 74} / 100`}</span>
             </div>
         </div>
     );
@@ -260,19 +260,19 @@ function ComparisonPanel({ expectedOutput, actualOutput }) {
     return (
         <div className="space-y-3">
             {firstDiffLine !== -1 && (
-                <div className="rounded-lg bg-amber-50 p-2 text-xs font-medium text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
-                    <span className="font-bold">Hint:</span> First difference found at line {firstDiffLine}. {getPossibleCause()}
+                <div className="rounded-xl border border-[#7C5CFF]/30 bg-[#7C5CFF]/[0.08] p-2 text-xs font-medium text-[#d8ccff]">
+                    <span className="font-bold text-white">Hint:</span> First difference found at line {firstDiffLine}. {getPossibleCause()}
                 </div>
             )}
-            <div className="rounded-xl border border-gray-200 bg-white/90 p-4 dark:border-gray-700/70 dark:bg-gray-900/70">
+            <div className="rounded-2xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] backdrop-blur-xl p-4">
                 <div className="mb-3 grid gap-3 sm:grid-cols-[72px_minmax(0,1fr)_minmax(0,1fr)]">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#91A8C3]">
                         Line
                     </p>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-green-700 dark:text-green-300">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
                         Expected
                     </p>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#c4b5fd]">
                         Actual
                     </p>
                 </div>
@@ -282,14 +282,14 @@ function ComparisonPanel({ expectedOutput, actualOutput }) {
                             key={`${line.lineNumber}-${line.expectedLine}-${line.actualLine}`}
                             className="grid gap-3 rounded-xl sm:grid-cols-[72px_minmax(0,1fr)_minmax(0,1fr)]"
                         >
-                            <div className={`rounded-lg px-3 py-2 text-xs font-semibold ${line.matches ? 'bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-200' : 'bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-200'}`}>
+                            <div className={`rounded-lg px-3 py-2 text-xs font-semibold ${line.matches ? 'bg-cyan-400/10 text-cyan-200' : 'bg-rose-400/10 text-rose-200'}`}>
                                 Line {line.lineNumber}
                             </div>
-                            <pre className={`overflow-x-auto whitespace-pre-wrap rounded-lg px-3 py-2 font-mono text-sm leading-relaxed ${line.matches ? 'bg-green-50 text-green-900 dark:bg-green-950/20 dark:text-green-100' : 'bg-red-50 text-red-900 dark:bg-red-950/20 dark:text-red-100'}`}>{line.expectedLine || ' '}</pre>
-                            <pre className={`overflow-x-auto whitespace-pre-wrap rounded-lg px-3 py-2 font-mono text-sm leading-relaxed ${line.matches ? 'bg-green-50 text-green-900 dark:bg-green-950/20 dark:text-green-100' : 'bg-red-50 text-red-900 dark:bg-red-950/20 dark:text-red-100'}`}>{line.actualLine || ' '}</pre>
+                            <pre className={`overflow-x-auto whitespace-pre-wrap rounded-lg px-3 py-2 font-mono text-sm leading-relaxed ${line.matches ? 'bg-cyan-400/5 text-cyan-50' : 'bg-rose-400/5 text-rose-50'}`}>{line.expectedLine || ' '}</pre>
+                            <pre className={`overflow-x-auto whitespace-pre-wrap rounded-lg px-3 py-2 font-mono text-sm leading-relaxed ${line.matches ? 'bg-cyan-400/5 text-cyan-50' : 'bg-rose-400/5 text-rose-50'}`}>{line.actualLine || ' '}</pre>
                         </div>
                     )) : (
-                        <p className="text-sm text-gray-500 dark:text-gray-400">No expected output provided.</p>
+                        <p className="text-sm text-[#91A8C3]">No expected output provided.</p>
                     )}
                 </div>
             </div>
@@ -299,17 +299,17 @@ function ComparisonPanel({ expectedOutput, actualOutput }) {
 
 function OverlayPanel({ title, subtitle, onClose, children }) {
     return createPortal(
-        <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm">
-            <div className="flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-[0_30px_120px_-36px_rgba(15,23,42,0.7)] dark:bg-slate-950">
-                <div className="flex items-start justify-between gap-4 border-b border-gray-200 bg-[linear-gradient(180deg,rgba(255,248,239,0.95),rgba(248,250,252,0.88))] px-6 py-5 dark:border-gray-800 dark:bg-[linear-gradient(180deg,rgba(30,41,59,0.92),rgba(2,6,23,0.96))]">
+        <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-[#03070f]/70 p-4 backdrop-blur-md">
+            <div className="flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-[rgba(0,212,255,0.22)] bg-[#0b1730]/95 shadow-[0_0_0_1px_rgba(0,212,255,0.08),0_40px_140px_-40px_rgba(0,212,255,0.35)]">
+                <div className="flex items-start justify-between gap-4 border-b border-[rgba(0,212,255,0.16)] bg-[linear-gradient(180deg,rgba(21,37,68,0.9),rgba(8,17,32,0.92))] px-6 py-5">
                     <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-600 dark:text-amber-300">{subtitle}</p>
-                        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">{title}</h2>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#00D4FF]">{subtitle}</p>
+                        <h2 className="mt-2 text-2xl font-semibold tracking-tight text-[#EAF6FF]">{title}</h2>
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-gray-200 bg-white/90 text-gray-600 transition hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:bg-slate-900/70 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:text-white"
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(0,212,255,0.25)] bg-[rgba(16,28,52,0.7)] text-[#91A8C3] transition hover:border-[#00D4FF]/60 hover:text-[#EAF6FF] hover:shadow-[0_0_16px_-4px_rgba(0,212,255,0.6)]"
                         aria-label="Close overlay"
                     >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -317,7 +317,7 @@ function OverlayPanel({ title, subtitle, onClose, children }) {
                         </svg>
                     </button>
                 </div>
-                <div className="min-h-0 flex-1 overflow-y-auto bg-[linear-gradient(180deg,rgba(248,250,252,0.72),rgba(255,255,255,0.92))] px-6 py-6 dark:bg-[linear-gradient(180deg,rgba(15,23,42,0.72),rgba(2,6,23,0.94))]">
+                <div className="min-h-0 flex-1 overflow-y-auto bg-[linear-gradient(180deg,rgba(8,17,32,0.6),rgba(11,23,48,0.9))] px-6 py-6">
                     {children}
                 </div>
             </div>
@@ -392,7 +392,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
 
     const editorRef = useRef(null);
     const remoteCursorMarkersRef = useRef({});
-    const myColorRef = useRef('#f59e0b');
+    const myColorRef = useRef('#00D4FF');
     const settingsRef = useRef(null);
     const selectedLanguageRef = useRef(DEFAULT_LANGUAGE);
     const isUserLanguageChangeRef = useRef(false);
@@ -437,7 +437,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
     const [showCelebration, setShowCelebration] = useState(false);
     const [runVisualState, setRunVisualState] = useState("idle");
     const [rightPanelWidthPct, setRightPanelWidthPct] = useState(() => {
-        const raw = Number(localStorage.getItem("forkspace.rightPanelWidthPct"));
+        const raw = Number(localStorage.getItem("Axion.rightPanelWidthPct"));
         if (Number.isFinite(raw) && raw >= 25 && raw <= 50) return raw;
         return 35;
     });
@@ -561,7 +561,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
 
     useEffect(() => {
         localStorage.setItem(
-            "forkspace.rightPanelWidthPct",
+            "Axion.rightPanelWidthPct",
             String(rightPanelWidthPct),
         );
     }, [rightPanelWidthPct]);
@@ -587,9 +587,9 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
     const renderReviewContent = () => {
         if (isReviewLoading) {
             return (
-                <div className="flex min-h-[14rem] items-center justify-center rounded-[1.4rem] border border-amber-200 bg-amber-50/70 p-5 dark:border-amber-800/40 dark:bg-amber-900/20">
-                    <div className="flex items-center gap-3 text-sm font-medium text-amber-800 dark:text-amber-200">
-                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-amber-500 border-t-transparent"></div>
+                <div className="flex min-h-[14rem] items-center justify-center rounded-[1.4rem] border border-[#7C5CFF]/30 bg-[#7C5CFF]/[0.06] backdrop-blur-xl p-5">
+                    <div className="flex items-center gap-3 text-sm font-medium text-[#d8ccff]">
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#a78bfa] border-t-transparent"></div>
                         Analyzing solution...
                     </div>
                 </div>
@@ -598,7 +598,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
 
         if (!reviewContent) {
             return (
-                <div className="rounded-[1.4rem] border border-dashed border-gray-300 bg-white/80 p-5 text-sm leading-7 text-gray-600 dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-400">
+                <div className="rounded-[1.4rem] border border-dashed border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.4)] p-5 text-sm leading-7 text-[#91A8C3]">
                     Run `Review Solution` to get complexity, bug checks, and optimization suggestions here.
                 </div>
             );
@@ -670,7 +670,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
     const isRunBusy = lastRunMeta?.status === "Running";
     const isSubmitBusy = lastRunMeta?.status === "Submitting samples...";
     const roomEnergyPercent = Math.max(0, Math.min(100, activityScore));
-    const roomEnergyTone = activityScore > 20 ? "bg-amber-500" : "bg-gray-600";
+    const roomEnergyTone = activityScore > 20 ? "bg-gradient-to-r from-[#00D4FF] via-[#1E90FF] to-[#7C5CFF]" : "bg-[rgba(0,212,255,0.15)]";
     const partnerUser = users.find((user) => user && user.socketId !== currentSocketId);
     const partnerIdle = partnerUser?.username
         ? activityClock - (partnerLastActivity[partnerUser.username] || activityClock) >= 180000
@@ -836,14 +836,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
 
         if (wrapper) {
             wrapper.classList.remove(
-                "forkspace-editor-driver",
-                "forkspace-editor-navigator",
-                "forkspace-editor-mentor",
-                "forkspace-editor-candidate",
-                "forkspace-editor-shared",
-                "forkspace-editor-locked",
+                "Axion-editor-driver",
+                "Axion-editor-navigator",
+                "Axion-editor-mentor",
+                "Axion-editor-candidate",
+                "Axion-editor-shared",
+                "Axion-editor-locked",
             );
-            wrapper.classList.add(`forkspace-editor-${controlTone}`);
+            wrapper.classList.add(`Axion-editor-${controlTone}`);
         }
     }, [controlTone, editorUnlocked]);
 
@@ -916,7 +916,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
             const anchorPos = editorRef.current.posFromIndex(safeAnchor);
             const selectionStart = safeAnchor <= safeHead ? anchorPos : cursorPos;
             const selectionEnd = safeAnchor <= safeHead ? cursorPos : anchorPos;
-            const userColor = color || '#f59e0b';
+            const userColor = color || '#00D4FF';
 
             const cursorEl = document.createElement('span');
             cursorEl.className = 'remote-cursor-widget';
@@ -1015,7 +1015,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                     particleCount: 160,
                     spread: 90,
                     origin: { x: 0.5, y: 0 },
-                    colors: ["#f59e0b", "#14b8a6", "#fbbf24", "#2dd4bf"],
+                    colors: ["#00D4FF", "#1E90FF", "#00F5FF", "#7C5CFF"],
                     ticks: 240,
                 });
                 window.setTimeout(() => {
@@ -1023,7 +1023,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         particleCount: 120,
                         spread: 110,
                         origin: { x: 0.5, y: 0.05 },
-                        colors: ["#f59e0b", "#14b8a6", "#fbbf24", "#2dd4bf"],
+                        colors: ["#00D4FF", "#1E90FF", "#00F5FF", "#7C5CFF"],
                         ticks: 220,
                     });
                 }, 350);
@@ -1430,7 +1430,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                     pixelRatio: 2,
                 });
                 const link = document.createElement("a");
-                link.download = "forkspace-session.png";
+                link.download = "Axion-session.png";
                 link.href = dataUrl;
                 link.click();
             }
@@ -1483,10 +1483,10 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
             updatedAt: Date.now(),
         });
         setOutput(
-            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/50 rounded-lg p-4">
+            <div className="rounded-2xl border border-[#1E90FF]/30 bg-[#1E90FF]/[0.08] backdrop-blur-md p-4">
                 <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-blue-700 dark:text-blue-400 font-medium">Compiling...<span className="workspace-blink-cursor">|</span></span>
+                    <div className="w-5 h-5 border-2 border-[#00D4FF] border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-[#7dd3fc] font-medium">Compiling...<span className="workspace-blink-cursor">|</span></span>
                 </div>
             </div>
         );
@@ -1526,7 +1526,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                 sampleCheck: normalizedExpectedOutput ? "not_checked" : "not_available",
             });
             setOutput(
-                <div className="dark:text-red-200 p-4 text-red-800">
+                <div className="text-rose-300 p-4">
                     <p>Error running code: {runErrorMessage}</p>
                 </div>
             );
@@ -1640,8 +1640,8 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
             updatedAt: Date.now(),
         });
         setOutput(
-            <div className="rounded-lg border border-amber-200 bg-amber-50/80 p-4 dark:border-amber-800/40 dark:bg-amber-950/20">
-                <p className="text-sm font-medium text-amber-900 dark:text-amber-100">Compiling...<span className="workspace-blink-cursor">|</span></p>
+            <div className="rounded-2xl border border-[#7C5CFF]/30 bg-[#7C5CFF]/[0.08] backdrop-blur-md p-4">
+                <p className="text-sm font-medium text-[#e4defc]">Compiling...<span className="workspace-blink-cursor">|</span></p>
             </div>,
         );
         try {
@@ -1694,13 +1694,44 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
     }, [collabHintDismissed, selectedLanguage, editorContentVersion]); // eslint-disable-line react-hooks/exhaustive-deps -- editorContentVersion is an intentional invalidation signal
 
     return (
-        <div className="flex h-full min-h-0 flex-col bg-transparent">
+        <div className="relative flex h-full min-h-0 flex-col overflow-hidden bg-[#081120]">
+            <style>{`
+                @keyframes axionDrift {
+                    0%, 100% { transform: translate3d(0,0,0) scale(1); }
+                    50% { transform: translate3d(2%, -3%, 0) scale(1.05); }
+                }
+                @keyframes axionGridPan {
+                    0% { background-position: 0 0; }
+                    100% { background-position: 64px 64px; }
+                }
+                .Axion-bg-grid {
+                    background-image:
+                        linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+                    background-size: 64px 64px;
+                    animation: axionGridPan 40s linear infinite;
+                }
+                .Axion-bg-glow-a { animation: axionDrift 22s ease-in-out infinite; }
+                .Axion-bg-glow-b { animation: axionDrift 26s ease-in-out infinite reverse; }
+                @media (prefers-reduced-motion: reduce) {
+                    .Axion-bg-grid, .Axion-bg-glow-a, .Axion-bg-glow-b { animation: none !important; }
+                }
+            `}</style>
+
+            {/* Ambient background layer */}
+            <div className="pointer-events-none absolute inset-0 z-0" aria-hidden>
+                <div className="Axion-bg-grid absolute inset-0 opacity-70" />
+                <div className="Axion-bg-glow-a absolute -left-24 -top-24 h-[26rem] w-[26rem] rounded-full bg-[#1E90FF]/20 blur-[110px]" />
+                <div className="Axion-bg-glow-b absolute -right-24 top-1/3 h-[24rem] w-[24rem] rounded-full bg-[#7C5CFF]/20 blur-[120px]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(16,28,52,0)_0%,rgba(5,10,20,0.6)_100%)]" />
+            </div>
+
             {unlockedTitle ? (
-                <div className="pointer-events-none fixed inset-0 z-[10001] flex items-center justify-center bg-slate-950/40 backdrop-blur-sm">
-                    <div className="rounded-3xl border border-amber-400/30 bg-slate-950/95 px-10 py-8 text-center text-white shadow-2xl">
-                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-300">Title Unlocked</p>
+                <div className="pointer-events-none fixed inset-0 z-[10001] flex items-center justify-center bg-[#03070f]/60 backdrop-blur-sm">
+                    <div className="rounded-3xl border border-[#00D4FF]/40 bg-[#0b1730]/95 px-10 py-8 text-center text-white shadow-[0_0_60px_-10px_rgba(0,212,255,0.6)]">
+                        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#00D4FF]">Title Unlocked</p>
                         <div className="mt-4 text-4xl">🏆</div>
-                        <p className="mt-4 text-2xl font-bold text-amber-300">{unlockedTitle}</p>
+                        <p className="mt-4 text-2xl font-bold text-[#00D4FF]">{unlockedTitle}</p>
                     </div>
                 </div>
             ) : null}
@@ -1708,12 +1739,12 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                 <div className="pointer-events-none absolute -left-[9999px] top-0">
                     <div
                         ref={shareCardCaptureRef}
-                        className="h-[630px] w-[1200px] bg-slate-900 px-14 py-12 text-white"
-                        style={{ background: "linear-gradient(135deg, #0f172a 0%, #111827 55%, #1f2937 100%)" }}
+                        className="h-[630px] w-[1200px] px-14 py-12 text-white"
+                        style={{ background: "linear-gradient(135deg, #081120 0%, #0d1a30 55%, #101c34 100%)" }}
                     >
-                        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-amber-300">ForkSpace</p>
+                        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#00D4FF]">Axion</p>
                         <p className="mt-2 text-5xl font-black">{roomState?.problem?.title || "Untitled Practice Session"}</p>
-                        <div className="mt-6 inline-flex rounded-full bg-amber-400 px-5 py-2 text-3xl font-bold text-slate-950">
+                        <div className="mt-6 inline-flex rounded-full bg-gradient-to-r from-[#00D4FF] to-[#1E90FF] px-5 py-2 text-3xl font-bold text-[#081120]">
                             {lastReportPayload.sessionScore} / 100
                         </div>
                         <div className="mt-8 flex items-center gap-8 text-2xl">
@@ -1724,19 +1755,19 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 </div>
                             ))}
                         </div>
-                        <div className="mt-8 grid grid-cols-2 gap-6 text-xl text-slate-200">
+                        <div className="mt-8 grid grid-cols-2 gap-6 text-xl text-[#91A8C3]">
                             <p>Language: {LANGUAGE_OPTIONS[selectedLanguageRef.current]?.label || "C++"}</p>
                             <p>Duration: {formatDuration(Math.floor((Date.now() - sessionStartedAtRef.current) / 1000))}</p>
                             <p>Date: {new Date().toLocaleDateString()}</p>
                             <p>URL: fork-space.vercel.app</p>
                         </div>
-                        <p className="mt-10 max-w-4xl text-lg leading-8 text-slate-300">{lastReportPayload.howYouThink}</p>
+                        <p className="mt-10 max-w-4xl text-lg leading-8 text-[#cfe4f7]">{lastReportPayload.howYouThink}</p>
                     </div>
                 </div>
             ) : null}
-            <div className="h-[2px] w-full bg-gray-700/60">
+            <div className="relative z-10 h-[2px] w-full bg-[rgba(0,212,255,0.08)]">
                 <div
-                    className={`h-full transition-[width] duration-500 ${roomEnergyTone}`}
+                    className={`h-full transition-[width] duration-500 shadow-[0_0_10px_1px_rgba(0,212,255,0.6)] ${roomEnergyTone}`}
                     style={{ width: `${roomEnergyPercent}%` }}
                 />
             </div>
@@ -1748,24 +1779,24 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                 >
                     <div className="space-y-5">
                         <div className="grid gap-3 md:grid-cols-4">
-                            <div className="rounded-[1.35rem] border border-gray-200/80 bg-white/90 p-4 shadow-sm dark:border-gray-700/80 dark:bg-slate-900/70">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Language</p>
-                                <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{lastRunMeta?.languageLabel || LANGUAGE_OPTIONS[selectedLanguageRef.current].label}</p>
+                            <div className="rounded-[1.35rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Language</p>
+                                <p className="mt-2 text-sm font-semibold text-[#EAF6FF]">{lastRunMeta?.languageLabel || LANGUAGE_OPTIONS[selectedLanguageRef.current].label}</p>
                             </div>
-                            <div className="rounded-[1.35rem] border border-gray-200/80 bg-white/90 p-4 shadow-sm dark:border-gray-700/80 dark:bg-slate-900/70">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Status</p>
-                                <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{lastRunMeta?.status || 'idle'}</p>
+                            <div className="rounded-[1.35rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Status</p>
+                                <p className="mt-2 text-sm font-semibold text-[#EAF6FF]">{lastRunMeta?.status || 'idle'}</p>
                             </div>
-                            <div className="rounded-[1.35rem] border border-gray-200/80 bg-white/90 p-4 shadow-sm dark:border-gray-700/80 dark:bg-slate-900/70">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Execution Time</p>
-                                <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{lastRunMeta?.time ?? 'Not run yet'}</p>
+                            <div className="rounded-[1.35rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Execution Time</p>
+                                <p className="mt-2 text-sm font-semibold text-[#EAF6FF]">{lastRunMeta?.time ?? 'Not run yet'}</p>
                             </div>
-                            <div className="rounded-[1.35rem] border border-gray-200/80 bg-white/90 p-4 shadow-sm dark:border-gray-700/80 dark:bg-slate-900/70">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Memory</p>
-                                <p className="mt-2 text-sm font-semibold text-slate-900 dark:text-white">{lastRunMeta?.memory ?? 'Not run yet'}</p>
+                            <div className="rounded-[1.35rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.65)] backdrop-blur-xl p-4">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Memory</p>
+                                <p className="mt-2 text-sm font-semibold text-[#EAF6FF]">{lastRunMeta?.memory ?? 'Not run yet'}</p>
                             </div>
                         </div>
-                        <div className={`rounded-[1.5rem] border bg-white/88 p-5 shadow-sm dark:bg-slate-900/70 ${runFeedbackTone === "AC" ? "workspace-output-success border-green-200/80 dark:border-green-700/60" : runFeedbackTone === "WA" ? "workspace-output-wa border-red-200/80 dark:border-red-700/60" : runFeedbackTone === "TLE" ? "workspace-output-tle border-amber-200/80 dark:border-amber-700/60" : "border-gray-200/80 dark:border-gray-700/80"}`}>
+                        <div className={`rounded-[1.5rem] border bg-[rgba(16,28,52,0.6)] backdrop-blur-xl p-5 ${runFeedbackTone === "AC" ? "workspace-output-success border-cyan-400/40 shadow-[0_0_30px_-10px_rgba(0,245,255,0.5)]" : runFeedbackTone === "WA" ? "workspace-output-wa border-rose-400/40 shadow-[0_0_30px_-10px_rgba(255,80,110,0.5)]" : runFeedbackTone === "TLE" ? "workspace-output-tle border-[#7C5CFF]/40 shadow-[0_0_30px_-10px_rgba(124,92,255,0.5)]" : "border-[rgba(0,212,255,0.16)]"}`}>
                             {output}
                         </div>
                     </div>
@@ -1789,7 +1820,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 <button
                                     type="button"
                                     onClick={handleShareSessionCard}
-                                    className="w-full rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800 dark:border-emerald-700/70 dark:bg-emerald-900/20 dark:text-emerald-200"
+                                    className="w-full rounded-xl border border-cyan-400/40 bg-cyan-400/[0.08] px-3 py-2 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/[0.14] hover:shadow-[0_0_18px_-4px_rgba(0,245,255,0.6)]"
                                 >
                                     Share Card
                                 </button>
@@ -1800,7 +1831,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                         await navigator.clipboard.writeText(url);
                                         toast.success("Share link copied");
                                     }}
-                                    className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-200"
+                                    className="w-full rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-3 py-2 text-sm font-medium text-[#EAF6FF] transition hover:border-[#00D4FF]/50"
                                 >
                                     Copy report link
                                 </button>
@@ -1816,21 +1847,21 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                     onClose={() => setShowAnalysisModal(false)}
                 >
                     <div className="space-y-5">
-                        <div className="rounded-[1.4rem] border border-gray-200/80 bg-white p-4 dark:border-gray-700/80 dark:bg-[#0d172b]">
+                        <div className="rounded-[1.4rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] backdrop-blur-xl p-4">
                             <div className="mb-3 flex items-center justify-between gap-3">
                                 <button
                                     type="button"
                                     onClick={() => setShowChecklist((v) => !v)}
-                                    className="text-xs font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                                    className="text-xs font-semibold uppercase tracking-wider text-[#91A8C3] hover:text-[#EAF6FF]"
                                 >
                                     Edge Case Checklist {showChecklist ? "Hide" : "Show"}
                                 </button>
                                 <div className="flex items-center gap-2 text-[11px]">
-                                    <span className="rounded-full border border-gray-200 bg-white px-2 py-0.5 text-gray-600 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-300">
+                                    <span className="rounded-full border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-2 py-0.5 text-[#91A8C3]">
                                         {checklistCompleted}/{checklistTotal}
                                     </span>
                                     {criticalOpenCount > 0 && (
-                                        <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-red-700 dark:border-red-800/50 dark:bg-red-950/20 dark:text-red-300">
+                                        <span className="rounded-full border border-rose-400/30 bg-rose-400/[0.08] px-2 py-0.5 text-rose-300">
                                             {criticalOpenCount} critical open
                                         </span>
                                     )}
@@ -1839,21 +1870,21 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             {showChecklist ? (
                             <div className="grid grid-cols-1 gap-2">
                                 {session.edgeCaseChecklist.map((item) => (
-                                    <label key={item.id} className="group flex cursor-pointer items-start gap-3 rounded-lg border border-transparent px-2 py-1.5 hover:border-gray-200 dark:hover:border-gray-700">
+                                    <label key={item.id} className="group flex cursor-pointer items-start gap-3 rounded-lg border border-transparent px-2 py-1.5 hover:border-[rgba(0,212,255,0.15)]">
                                         <input
                                             type="checkbox"
                                             checked={item.checked}
                                             onChange={() => toggleEdgeCase(item.id)}
-                                            className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800"
+                                            className="mt-0.5 h-4 w-4 rounded border-[rgba(0,212,255,0.3)] bg-transparent text-[#00D4FF] focus:ring-[#00D4FF]"
                                         />
                                         <div className="min-w-0">
                                             <div className="flex items-center gap-2">
-                                                <span className={`text-sm ${item.checked ? 'text-gray-400 line-through' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                <span className={`text-sm ${item.checked ? 'text-[#91A8C3]/60 line-through' : 'text-[#cfe4f7]'}`}>
                                                     {item.label}
                                                 </span>
                                             </div>
                                             {item.hint ? (
-                                                <p className="mt-0.5 text-xs leading-5 text-gray-500 dark:text-gray-400">
+                                                <p className="mt-0.5 text-xs leading-5 text-[#91A8C3]">
                                                     {item.hint}
                                                 </p>
                                             ) : null}
@@ -1862,7 +1893,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 ))}
                             </div>
                             ) : (
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-[#91A8C3]">
                                     Checklist is collapsed so analysis stays focused. Expand when you want to verify edge cases.
                                 </p>
                             )}
@@ -1872,7 +1903,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             <button
                                 type="button"
                                 onClick={reviewSolution}
-                                className="inline-flex flex-1 items-center justify-center rounded-xl border border-amber-200 bg-amber-50/90 px-3 py-2 text-sm font-medium text-amber-700 transition hover:bg-amber-100 dark:border-amber-800/40 dark:bg-amber-900/20 dark:text-amber-300 dark:hover:bg-amber-900/30"
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#7C5CFF]/35 bg-[#7C5CFF]/[0.1] px-3 py-2 text-sm font-medium text-[#d8ccff] transition hover:bg-[#7C5CFF]/[0.18] hover:shadow-[0_0_18px_-4px_rgba(124,92,255,0.5)]"
                             >
                                 {isReviewLoading ? <ButtonSpinner /> : null}
                                 Re-run analysis
@@ -1880,17 +1911,17 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             <button
                                 type="button"
                                 onClick={fetchAIHints}
-                                className="inline-flex flex-1 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-stone-50 hover:text-gray-900 dark:border-gray-700 dark:bg-[#111d33] dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-[#16243d] dark:hover:text-white"
+                                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-3 py-2 text-sm font-medium text-[#EAF6FF] transition hover:border-[#00D4FF]/50 hover:bg-[#00D4FF]/[0.08]"
                             >
                                 {isLoading ? <ButtonSpinner /> : null}
                                 Refresh AI Hints
                             </button>
                         </div>
 
-                        <div className="rounded-[1.4rem] border border-gray-200/80 bg-white p-4 dark:border-gray-700/80 dark:bg-[#0d172b]">
+                        <div className="rounded-[1.4rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] backdrop-blur-xl p-4">
                             <div className="mb-3 flex items-center justify-between">
-                                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">AI Hints</h3>
-                                {isLoading ? <span className="text-[10px] text-amber-500">Loading...</span> : null}
+                                <h3 className="text-xs font-semibold uppercase tracking-wider text-[#91A8C3]">AI Hints</h3>
+                                {isLoading ? <span className="text-[10px] text-[#00D4FF]">Loading...</span> : null}
                             </div>
                             {aiHints.length > 0 ? (
                                 <div className="space-y-2">
@@ -1899,14 +1930,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                             key={index}
                                             type="button"
                                             onClick={() => applyHint(hint)}
-                                            className="w-full rounded-xl border border-gray-200 bg-white/80 p-3 text-left text-sm text-gray-700 transition hover:border-amber-200 hover:bg-amber-50/70 dark:border-gray-700 dark:bg-slate-900/50 dark:text-gray-200 dark:hover:border-amber-800/40 dark:hover:bg-amber-900/10"
+                                            className="w-full rounded-xl border border-[rgba(0,212,255,0.15)] bg-[rgba(16,28,52,0.4)] p-3 text-left text-sm text-[#cfe4f7] transition hover:border-[#00D4FF]/40 hover:bg-[#00D4FF]/[0.06]"
                                         >
                                             {hint}
                                         </button>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-sm text-gray-500 dark:text-gray-400">No suggestions available right now.</p>
+                                <p className="text-sm text-[#91A8C3]">No suggestions available right now.</p>
                             )}
                         </div>
 
@@ -1924,17 +1955,17 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                     }}
                 >
                     <div className="space-y-4">
-                        <p className="text-sm text-slate-600 dark:text-slate-300">
+                        <p className="text-sm text-[#cfe4f7]">
                             Your current code will be replaced with the starter template for {LANGUAGE_OPTIONS[pendingLanguage]?.label || pendingLanguage}.
                         </p>
                         <div className="grid gap-4 lg:grid-cols-2">
-                            <div className="rounded-xl border border-red-200/70 bg-red-50/60 p-3 dark:border-red-800/40 dark:bg-red-950/20">
-                                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-red-700 dark:text-red-300">Your current code (will be replaced)</p>
-                                <pre className="max-h-[50vh] overflow-auto whitespace-pre-wrap rounded-lg bg-white/90 p-3 font-mono text-xs leading-6 text-slate-800 dark:bg-slate-900/70 dark:text-slate-100">{editorRef.current?.getValue() ?? ""}</pre>
+                            <div className="rounded-xl border border-rose-400/25 bg-rose-400/[0.05] p-3">
+                                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-rose-300">Your current code (will be replaced)</p>
+                                <pre className="max-h-[50vh] overflow-auto whitespace-pre-wrap rounded-lg bg-[#050c18] p-3 font-mono text-xs leading-6 text-[#cfe4f7]">{editorRef.current?.getValue() ?? ""}</pre>
                             </div>
-                            <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/60 p-3 dark:border-emerald-800/40 dark:bg-emerald-950/20">
-                                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700 dark:text-emerald-300">New starter template</p>
-                                <pre className="max-h-[50vh] overflow-auto whitespace-pre-wrap rounded-lg bg-white/90 p-3 font-mono text-xs leading-6 text-slate-800 dark:bg-slate-900/70 dark:text-slate-100">{LANGUAGE_OPTIONS[pendingLanguage]?.starterCode ?? ""}</pre>
+                            <div className="rounded-xl border border-cyan-400/25 bg-cyan-400/[0.05] p-3">
+                                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-300">New starter template</p>
+                                <pre className="max-h-[50vh] overflow-auto whitespace-pre-wrap rounded-lg bg-[#050c18] p-3 font-mono text-xs leading-6 text-[#cfe4f7]">{LANGUAGE_OPTIONS[pendingLanguage]?.starterCode ?? ""}</pre>
                             </div>
                         </div>
                         <div className="flex items-center justify-end gap-2">
@@ -1944,7 +1975,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                     setShowLanguageSwitchModal(false);
                                     setPendingLanguage(null);
                                 }}
-                                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-200"
+                                className="rounded-lg border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-4 py-2 text-sm font-medium text-[#EAF6FF] hover:border-[#00D4FF]/40"
                             >
                                 Cancel
                             </button>
@@ -1955,7 +1986,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                     setShowLanguageSwitchModal(false);
                                     setPendingLanguage(null);
                                 }}
-                                className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-400"
+                                className="rounded-lg bg-gradient-to-r from-[#1E90FF] to-[#00D4FF] px-4 py-2 text-sm font-semibold text-[#081120] shadow-[0_0_20px_-4px_rgba(0,212,255,0.6)] hover:brightness-110"
                             >
                                 Switch Language
                             </button>
@@ -1970,17 +2001,17 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                     onClose={() => setShowClearConfirmModal(false)}
                 >
                     <div className="space-y-4">
-                        <p className="text-sm text-slate-700 dark:text-slate-300">
+                        <p className="text-sm text-[#cfe4f7]">
                             Clear the editor for everyone in this room? This can&apos;t be undone.
                         </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                        <p className="text-xs text-[#91A8C3]">
                             Confirm unlocks after 2 seconds to prevent accidental data loss.
                         </p>
                         <div className="flex items-center justify-end gap-2">
                             <button
                                 type="button"
                                 onClick={() => setShowClearConfirmModal(false)}
-                                className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-200"
+                                className="rounded-lg border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-4 py-2 text-sm font-medium text-[#EAF6FF] hover:border-[#00D4FF]/40"
                             >
                                 Cancel
                             </button>
@@ -1988,7 +2019,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 type="button"
                                 onClick={handleConfirmClear}
                                 disabled={clearConfirmCountdown > 0}
-                                className="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                                className="rounded-lg bg-gradient-to-r from-rose-600 to-rose-500 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_20px_-4px_rgba(244,63,94,0.6)] hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {clearConfirmCountdown > 0 ? `Confirm in ${clearConfirmCountdown.toFixed(1)}s` : "Confirm Clear"}
                             </button>
@@ -2016,11 +2047,11 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                 />
             ) : null}
 
-            <div className="flex flex-wrap items-center gap-2 border-b border-white/10 bg-white px-4 py-2.5 dark:bg-[#081121]">
+            <div className="relative z-10 flex flex-wrap items-center gap-2 border-b border-[rgba(0,212,255,0.12)] bg-[rgba(8,17,32,0.75)] backdrop-blur-xl px-4 py-2.5">
                     <button
                         data-cursor="button"
                         data-run-state={runVisualState}
-                        className={`workspace-run-button inline-flex h-10 items-center gap-2 rounded-md bg-teal-500 px-4 text-[15px] font-semibold text-white shadow-sm shadow-teal-900/40 transition-[transform,background-color] duration-150 hover:bg-teal-400 disabled:pointer-events-none disabled:opacity-50 ${runButtonAnimating ? "scale-105" : "scale-100"}`}
+                        className={`workspace-run-button inline-flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-[#1E90FF] to-[#00D4FF] px-4 text-[15px] font-semibold text-[#081120] shadow-[0_0_20px_-4px_rgba(0,212,255,0.6)] transition-[transform,box-shadow] duration-150 hover:shadow-[0_0_28px_-2px_rgba(0,212,255,0.85)] hover:brightness-105 disabled:pointer-events-none disabled:opacity-50 ${runButtonAnimating ? "scale-105" : "scale-100"}`}
                         onClick={runCode}
                         disabled={!canRunInCurrentMode || isRunBusy}
                         title={canRunInCurrentMode ? 'Run code for everyone in this room' : 'Only the Driver can run code in mock mode'}
@@ -2033,13 +2064,13 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         {isRunBusy ? "Running..." : "Run"}
                     </button>
                     {showFormattedFlash ? (
-                        <span className="inline-flex h-8 items-center rounded-full border border-emerald-300 bg-emerald-50 px-3 text-xs font-semibold text-emerald-700 dark:border-emerald-700/70 dark:bg-emerald-950/30 dark:text-emerald-200">
+                        <span className="inline-flex h-8 items-center rounded-full border border-cyan-400/40 bg-cyan-400/[0.1] px-3 text-xs font-semibold text-cyan-200">
                             Formatted
                         </span>
                     ) : null}
                     <button
                         data-cursor="button"
-                        className="inline-flex h-10 items-center gap-2 rounded-md border border-amber-500/70 px-4 text-[15px] text-amber-400 transition-colors hover:bg-amber-500/10 disabled:pointer-events-none disabled:opacity-50"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl border border-[#00D4FF]/45 bg-[rgba(16,28,52,0.5)] px-4 text-[15px] text-[#7dd3fc] transition-colors hover:bg-[#00D4FF]/[0.1] hover:shadow-[0_0_16px_-4px_rgba(0,212,255,0.5)] disabled:pointer-events-none disabled:opacity-50"
                         onClick={submitSamples}
                         disabled={!canRunInCurrentMode || isSubmitBusy}
                         title={canRunInCurrentMode ? "Run all parsed sample tests (Judge0)" : "Only the Driver can submit in mock mode"}
@@ -2052,9 +2083,9 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         {isSubmitBusy ? "Submitting..." : "Submit"}
                     </button>
                     {partnerIdle ? (
-                        <span className="ml-2 text-sm italic text-gray-500 dark:text-gray-400">{partnerUser?.username} seems to be thinking...</span>
+                        <span className="ml-2 text-sm italic text-[#91A8C3]">{partnerUser?.username} seems to be thinking...</span>
                     ) : null}
-                    <span className="mx-1 h-5 w-px bg-white/15" />
+                    <span className="mx-1 h-5 w-px bg-[rgba(0,212,255,0.15)]" />
                     <button
                         type="button"
                         data-cursor="button"
@@ -2064,7 +2095,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 void reviewSolution();
                             }
                         }}
-                        className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/[0.03] px-3 text-[15px] text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.4)] px-3 text-[15px] text-[#cfe4f7] transition-colors hover:bg-[#00D4FF]/[0.08] hover:text-[#EAF6FF]"
                     >
                         {isReviewLoading ? <ButtonSpinner /> : (
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -2084,7 +2115,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             void generateSessionReport({ endSession: false });
                         }}
                         disabled={reportLoading}
-                        className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/[0.03] px-3 text-[15px] text-gray-200 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-60"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.4)] px-3 text-[15px] text-[#cfe4f7] transition-colors hover:bg-[#00D4FF]/[0.08] hover:text-[#EAF6FF] disabled:opacity-60"
                     >
                         {reportLoading ? <ButtonSpinner /> : (
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -2101,14 +2132,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             setTestGenerateSignal((v) => v + 1);
                             setIsOutputCollapsed(false);
                         }}
-                        className="inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/[0.03] px-3 text-[15px] text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+                        className="inline-flex h-10 items-center gap-2 rounded-xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.4)] px-3 text-[15px] text-[#cfe4f7] transition-colors hover:bg-[#00D4FF]/[0.08] hover:text-[#EAF6FF]"
                         title="Generate hidden tests"
                     >
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                         </svg>
                         Generate Tests
-                        <span className="rounded-full border border-amber-300/70 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-300">
+                        <span className="rounded-full border border-[#7C5CFF]/40 bg-[#7C5CFF]/[0.15] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#c4b5fd]">
                             Beta
                         </span>
                     </button>
@@ -2116,7 +2147,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         type="button"
                         data-cursor="button"
                         onClick={() => setIsOutputCollapsed((prev) => !prev)}
-                        className="hidden xl:inline-flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/[0.03] px-3 text-[15px] text-gray-200 transition-colors hover:bg-white/10 hover:text-white"
+                        className="hidden xl:inline-flex h-10 items-center gap-2 rounded-xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.4)] px-3 text-[15px] text-[#cfe4f7] transition-colors hover:bg-[#00D4FF]/[0.08] hover:text-[#EAF6FF]"
                         title={isOutputCollapsed ? "Show right sidebar" : "Collapse right sidebar"}
                     >
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
@@ -2130,7 +2161,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                     </button>
                     <button
                         data-cursor="button"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-white/15 text-gray-300 transition-colors hover:bg-white/5 hover:text-white disabled:pointer-events-none disabled:opacity-50"
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-[rgba(0,212,255,0.2)] text-[#91A8C3] transition-colors hover:bg-[#00D4FF]/[0.08] hover:text-[#EAF6FF] disabled:pointer-events-none disabled:opacity-50"
                         onClick={handleOpenClearConfirm}
                         disabled={!editorUnlocked}
                         title={editorUnlocked ? 'Clear editor' : 'Only the active editor owner can clear code right now'}
@@ -2147,14 +2178,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         <button
                             type="button"
                             onClick={handleUndoClear}
-                            className="inline-flex h-9 items-center gap-2 rounded-md border border-amber-300/70 bg-amber-50/80 px-3 text-xs font-semibold text-amber-800 hover:bg-amber-100 dark:border-amber-700/60 dark:bg-amber-900/20 dark:text-amber-200 dark:hover:bg-amber-900/30"
+                            className="inline-flex h-9 items-center gap-2 rounded-xl border border-[#7C5CFF]/40 bg-[#7C5CFF]/[0.1] px-3 text-xs font-semibold text-[#d8ccff] hover:bg-[#7C5CFF]/[0.18]"
                             title="Undo clear (available for 30 seconds)"
                         >
                             Undo Clear
                         </button>
                     ) : null}
-                    <div className="inline-flex h-10 items-center gap-2 rounded-full border border-gray-200 bg-white/92 px-3 shadow-sm dark:border-gray-700 dark:bg-gray-800/92">
-                        <label htmlFor="language-select" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
+                    <div className="inline-flex h-10 items-center gap-2 rounded-full border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.55)] px-3 backdrop-blur-md">
+                        <label htmlFor="language-select" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#91A8C3]">
                             Language
                         </label>
                         <select
@@ -2163,7 +2194,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             onChange={handleLanguageChange}
                             disabled={!editorUnlocked}
                             title={LANGUAGE_OPTIONS[selectedLanguage]?.label || "Language"}
-                            className="h-8 min-w-[138px] rounded-full border border-gray-200 bg-white px-3 text-[15px] font-medium text-gray-900 shadow-sm outline-none transition focus:border-gray-400 dark:border-gray-600 dark:bg-[#111d33] dark:text-white"
+                            className="h-8 min-w-[138px] rounded-full border border-[rgba(0,212,255,0.25)] bg-[#0b1730] px-3 text-[15px] font-medium text-[#EAF6FF] shadow-sm outline-none transition focus:border-[#00D4FF] focus:shadow-[0_0_0_3px_rgba(0,212,255,0.25)]"
                         >
                             {Object.entries(LANGUAGE_OPTIONS).map(([languageKey, config]) => (
                                 <option key={languageKey} value={languageKey}>
@@ -2172,14 +2203,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             ))}
                         </select>
                     </div>
-                    <div className="flex h-10 items-center gap-2 rounded-full border border-gray-200 bg-white/92 px-3 shadow-sm dark:border-gray-700 dark:bg-gray-800/92">
-                        <div className="h-2 w-2 animate-pulse rounded-full bg-emerald-500"></div>
-                        <span className="text-[15px] font-medium text-gray-600 dark:text-gray-400">{SESSION_MODE_LABELS[session.mode] || 'Peer Practice'}</span>
+                    <div className="flex h-10 items-center gap-2 rounded-full border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.55)] px-3 backdrop-blur-md">
+                        <div className="h-2 w-2 animate-pulse rounded-full bg-[#00F5FF] shadow-[0_0_8px_2px_rgba(0,245,255,0.7)]"></div>
+                        <span className="text-[15px] font-medium text-[#91A8C3]">{SESSION_MODE_LABELS[session.mode] || 'Peer Practice'}</span>
                     </div>
                         {(participationLabel === 'Driver' || participationLabel === 'Navigator') && (
                         <button
                             onClick={handleSwapRoles}
-                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 bg-white/92 text-gray-700 transition hover:border-gray-300 hover:bg-white hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800/92 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:text-white"
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.55)] text-[#cfe4f7] transition hover:border-[#00D4FF]/50 hover:bg-[#00D4FF]/[0.08] hover:text-[#EAF6FF]"
                             title="Swap Roles"
                         >
                             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2188,14 +2219,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         </button>
                     )}
                         {users.length > 0 && (
-                        <div className="flex h-9 items-center rounded-full border border-gray-200 bg-white/92 px-2 shadow-sm dark:border-gray-700 dark:bg-gray-800/92">
+                        <div className="flex h-9 items-center rounded-full border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.55)] px-2 backdrop-blur-md">
                             {users.slice(0, 5).map((user, index) => {
                                 if (!user) return null;
                                 return (
                                     <div
                                         key={user.socketId}
-                                        style={{ backgroundColor: user.color || '#94a3b8', marginLeft: index === 0 ? 0 : -6 }}
-                                        className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-sm dark:border-[#081121]"
+                                        style={{ backgroundColor: user.color || '#1E90FF', marginLeft: index === 0 ? 0 : -6 }}
+                                        className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#081120] text-sm shadow-[0_0_10px_-2px_rgba(0,212,255,0.6)]"
                                         title={`${user.username || "Guest"} (${user.role || "Peer"})`}
                                     >
                                         <AvatarGlyph avatar={getAvatarById(user.avatarId)} className="h-3.5 w-3.5" />
@@ -2205,31 +2236,31 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         </div>
                     )}
                         {problemToolbarMeta && (
-                        <div className="hidden min-w-0 max-w-[min(360px,42vw)] flex-col justify-center gap-1 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-left xl:flex">
-                            <span className="truncate text-xs font-semibold text-gray-100">
+                        <div className="hidden min-w-0 max-w-[min(360px,42vw)] flex-col justify-center gap-1 rounded-xl border border-[rgba(0,212,255,0.14)] bg-[rgba(16,28,52,0.4)] px-3 py-1.5 text-left xl:flex">
+                            <span className="truncate text-xs font-semibold text-[#EAF6FF]">
                                 {problemToolbarMeta.title || "Practice problem"}
                             </span>
-                            <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-gray-400">
+                            <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-[#91A8C3]">
                                 {problemToolbarMeta.tags?.slice(0, 5).map((t) => (
                                     <span
                                         key={t}
-                                        className="rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[10px] font-medium text-gray-300"
+                                        className="rounded-full border border-[rgba(0,212,255,0.16)] bg-[#00D4FF]/[0.06] px-2 py-0.5 text-[10px] font-medium text-[#7dd3fc]"
                                     >
                                         {t}
                                     </span>
                                 ))}
                                 {problemToolbarMeta.rating != null && problemToolbarMeta.rating !== "" ? (
-                                    <span className="whitespace-nowrap rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[10px]">
+                                    <span className="whitespace-nowrap rounded-full border border-[rgba(0,212,255,0.16)] bg-[#00D4FF]/[0.06] px-2 py-0.5 text-[10px]">
                                         Rating {String(problemToolbarMeta.rating)}
                                     </span>
                                 ) : null}
                                 {problemToolbarMeta.diff ? (
-                                    <span className="whitespace-nowrap rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[10px]">
+                                    <span className="whitespace-nowrap rounded-full border border-[rgba(0,212,255,0.16)] bg-[#00D4FF]/[0.06] px-2 py-0.5 text-[10px]">
                                         {String(problemToolbarMeta.diff)}
                                     </span>
                                 ) : null}
                                 {problemToolbarMeta.solved != null ? (
-                                    <span className="whitespace-nowrap rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[10px]">
+                                    <span className="whitespace-nowrap rounded-full border border-[rgba(0,212,255,0.16)] bg-[#00D4FF]/[0.06] px-2 py-0.5 text-[10px]">
                                         {problemToolbarMeta.solved.toLocaleString()} solves
                                     </span>
                                 ) : null}
@@ -2237,14 +2268,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                         </div>
                     )}
                     {isMockMode && (
-                            <div className="flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50/70 px-3 py-1.5 shadow-sm dark:border-amber-800/40 dark:bg-amber-900/20">
-                                <span className="min-w-[4.2rem] rounded-full border border-amber-300 bg-amber-100 px-3 py-1 text-xs font-bold tracking-[0.12em] text-amber-800 dark:border-amber-700/50 dark:bg-amber-900/40 dark:text-amber-100">
+                            <div className="flex items-center gap-2 rounded-full border border-[#7C5CFF]/30 bg-[#7C5CFF]/[0.08] px-3 py-1.5 backdrop-blur-md">
+                                <span className="min-w-[4.2rem] rounded-full border border-[#7C5CFF]/40 bg-[#7C5CFF]/[0.18] px-3 py-1 text-xs font-bold tracking-[0.12em] text-[#e4defc]">
                                     {formatTimerLabel(timeRemaining)}
                                 </span>
                                 <select
                                     value={timerDuration}
                                     onChange={handleTimerPresetChange}
-                                    className="h-9 rounded-xl border border-gray-200 bg-white px-2 text-sm font-medium text-slate-900 shadow-sm outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                    className="h-9 rounded-xl border border-[rgba(0,212,255,0.2)] bg-[#0b1730] px-2 text-sm font-medium text-[#EAF6FF] shadow-sm outline-none transition focus:border-[#7C5CFF]"
                                 >
                                     {TIMER_PRESETS.map((preset) => (
                                         <option key={preset.value} value={preset.value}>
@@ -2255,14 +2286,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 <button
                                     type="button"
                                     onClick={handleTimerToggle}
-                                    className="inline-flex h-9 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-white hover:text-gray-900 dark:border-gray-700 dark:bg-slate-800 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:text-white"
+                                    className="inline-flex h-9 items-center justify-center rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-3 text-sm font-medium text-[#EAF6FF] transition hover:border-[#00D4FF]/50"
                                 >
                                     {isTimerRunning ? "Pause" : "Start"}
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleTimerReset}
-                                    className="inline-flex h-9 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-white hover:text-gray-900 dark:border-gray-700 dark:bg-slate-800 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:text-white"
+                                    className="inline-flex h-9 items-center justify-center rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-3 text-sm font-medium text-[#EAF6FF] transition hover:border-[#00D4FF]/50"
                                 >
                                     Reset
                                 </button>
@@ -2271,7 +2302,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
             </div>
 
             <div
-                className="grid min-h-0 flex-1 grid-cols-1"
+                className="relative z-10 grid min-h-0 flex-1 grid-cols-1"
                 style={
                     isOutputCollapsed || !isDesktopLayout
                         ? undefined
@@ -2281,13 +2312,13 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                 <div
                     data-cursor="editor"
                     className={`editor-wrapper relative min-h-[24rem] border-t xl:min-h-0 ${editorUnlocked
-                    ? 'border-emerald-200/80 dark:border-emerald-800/40'
-                    : 'border-rose-200/80 dark:border-rose-800/40'
-                    } bg-white dark:bg-[#0a1324]`}
+                    ? 'border-cyan-400/25 shadow-[inset_0_1px_0_0_rgba(0,245,255,0.15)]'
+                    : 'border-rose-400/25 shadow-[inset_0_1px_0_0_rgba(255,80,110,0.15)]'
+                    } bg-[rgba(8,17,32,0.5)]`}
                 >
                     <textarea
                         id="realtimeEditor"
-                        className="h-full w-full resize-none border-0 bg-transparent p-6 text-sm font-mono text-gray-900 outline-none dark:text-white"
+                        className="h-full w-full resize-none border-0 bg-transparent p-6 text-sm font-mono text-[#EAF6FF] outline-none"
                         placeholder=""
                     />
                     {collaborationHintVisible ? (
@@ -2295,7 +2326,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                             className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center p-8"
                             aria-hidden
                         >
-                            <p className="max-w-sm text-center text-sm font-medium leading-relaxed text-gray-400 select-none dark:text-gray-500">
+                            <p className="max-w-sm text-center text-sm font-medium leading-relaxed text-[#91A8C3]/70 select-none">
                                 Start coding together...
                             </p>
                         </div>
@@ -2304,25 +2335,25 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
 
                 <div
                     onMouseDown={startPanelResize}
-                    className={`${isOutputCollapsed ? 'hidden' : 'hidden xl:block'} cursor-col-resize border-t border-gray-200/80 bg-gray-100/70 hover:bg-amber-200/80 dark:border-gray-700/80 dark:bg-slate-800/80 dark:hover:bg-amber-700/40`}
+                    className={`${isOutputCollapsed ? 'hidden' : 'hidden xl:block'} cursor-col-resize border-t border-[rgba(0,212,255,0.14)] bg-[rgba(16,28,52,0.5)] hover:bg-[#00D4FF]/20`}
                     title="Resize panel"
                 />
 
-                <aside className={`${isOutputCollapsed ? 'hidden xl:hidden' : 'block'} overflow-hidden border-t border-white/10 bg-white/[0.015] dark:bg-[#081121] xl:h-full xl:flex-none xl:border-l xl:border-t-0 xl:border-white/10`}>
+                <aside className={`${isOutputCollapsed ? 'hidden xl:hidden' : 'block'} overflow-hidden border-t border-[rgba(0,212,255,0.12)] bg-[rgba(8,17,32,0.55)] backdrop-blur-xl xl:h-full xl:flex-none xl:border-l xl:border-t-0`}>
                     <div className="flex h-full flex-col min-h-0">
-                        <div className="flex flex-none items-center gap-2 border-b border-gray-200/80 bg-white px-4 py-2.5 dark:border-gray-700/80 dark:bg-[#0b1528]">
+                        <div className="flex flex-none items-center gap-2 border-b border-[rgba(0,212,255,0.12)] bg-[rgba(11,23,48,0.7)] px-4 py-2.5">
                             <div className="flex gap-1.5">
-                                <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                                <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-                                <div className="h-3 w-3 rounded-full bg-green-500"></div>
+                                <div className="h-3 w-3 rounded-full bg-rose-400/70"></div>
+                                <div className="h-3 w-3 rounded-full bg-amber-300/70"></div>
+                                <div className="h-3 w-3 rounded-full bg-cyan-300/70"></div>
                             </div>
                         </div>
 
-                        <div className="flex-none border-b border-white/10 bg-stone-50 px-4 py-3.5 dark:bg-[#0d172b]">
-                            <div className="relative flex flex-wrap gap-2 rounded-[1.2rem] border border-gray-200/80 bg-white/70 p-1.5 shadow-sm dark:border-gray-700/80 dark:bg-slate-950/40">
+                        <div className="flex-none border-b border-[rgba(0,212,255,0.12)] bg-[rgba(13,23,43,0.7)] px-4 py-3.5">
+                            <div className="relative flex flex-wrap gap-2 rounded-[1.2rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(5,12,24,0.5)] p-1.5">
                                 <div
                                     aria-hidden="true"
-                                    className="absolute bottom-1 h-0.5 rounded-full bg-amber-400"
+                                    className="absolute bottom-1 h-0.5 rounded-full bg-gradient-to-r from-[#00D4FF] to-[#7C5CFF] shadow-[0_0_8px_1px_rgba(0,212,255,0.6)]"
                                     style={{
                                         left: `${rightTabIndicator.left}px`,
                                         width: `${rightTabIndicator.width}px`,
@@ -2345,8 +2376,8 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                             onClick={() => setActiveRightTab(tab.key)}
                                             data-cursor="button"
                                             className={`rounded-[0.95rem] border-b-2 px-3.5 py-2.5 text-sm transition ${isActive
-                                                ? "border-amber-400 text-white font-medium"
-                                                : "border-transparent text-gray-500 hover:text-gray-300"
+                                                ? "border-[#00D4FF] text-[#EAF6FF] font-medium"
+                                                : "border-transparent text-[#91A8C3] hover:text-[#cfe4f7]"
                                                 }`}
                                         >
                                             {tab.label}
@@ -2361,21 +2392,21 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 <div className="space-y-4">
                                     <div className="flex flex-wrap items-center gap-2">
                                         {runBy && (
-                                            <div className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                                            <div className="rounded-full border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] px-3 py-1 text-xs font-medium text-[#cfe4f7]">
                                                 Run by {runBy}
                                             </div>
                                         )}
-                                        <div className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                                        <div className="rounded-full border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] px-3 py-1 text-xs font-medium text-[#cfe4f7]">
                                             {lastRunMeta?.languageLabel || LANGUAGE_OPTIONS[selectedLanguageRef.current].label}
                                         </div>
-                                        <div className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                                        <div className="rounded-full border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] px-3 py-1 text-xs font-medium text-[#cfe4f7]">
                                             status: {lastRunMeta?.status || "idle"}
                                         </div>
                                         <div className={`rounded-full border px-3 py-1 text-xs font-medium ${lastRunMeta?.sampleCheck === "passed"
-                                            ? "border-green-200 bg-green-50 text-green-700 dark:border-green-800/50 dark:bg-green-950/30 dark:text-green-200"
+                                            ? "border-cyan-400/30 bg-cyan-400/[0.08] text-cyan-200"
                                             : lastRunMeta?.sampleCheck === "mismatch"
-                                                ? "border-red-200 bg-red-50 text-red-700 dark:border-red-800/50 dark:bg-red-950/30 dark:text-red-200"
-                                                : "border-gray-200 bg-white text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                                                ? "border-rose-400/30 bg-rose-400/[0.08] text-rose-200"
+                                                : "border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] text-[#cfe4f7]"
                                             }`}>
                                             sample: {lastRunMeta?.sampleCheck === "passed"
                                                 ? "passed"
@@ -2388,20 +2419,20 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                                             : "n/a"}
                                         </div>
                                         {lastRunMeta?.updatedAt ? (
-                                            <div className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                                            <div className="rounded-full border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] px-3 py-1 text-xs font-medium text-[#91A8C3]">
                                                 updated {new Date(lastRunMeta.updatedAt).toLocaleTimeString()}
                                             </div>
                                         ) : null}
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-3">
-                                        <div className="rounded-2xl border border-gray-200/80 bg-white px-3 py-3 shadow-sm dark:border-gray-700/80 dark:bg-[#111d33]">
-                                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">Execution Time</p>
-                                            <p className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{lastRunMeta?.time ?? "Not run yet"}</p>
+                                        <div className="rounded-2xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] px-3 py-3">
+                                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Execution Time</p>
+                                            <p className="mt-1 text-lg font-semibold text-[#EAF6FF]">{lastRunMeta?.time ?? "Not run yet"}</p>
                                         </div>
-                                        <div className="rounded-2xl border border-gray-200/80 bg-white px-3 py-3 shadow-sm dark:border-gray-700/80 dark:bg-[#111d33]">
-                                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">Memory</p>
-                                            <p className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{lastRunMeta?.memory ?? "Not run yet"}</p>
+                                        <div className="rounded-2xl border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] px-3 py-3">
+                                            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Memory</p>
+                                            <p className="mt-1 text-lg font-semibold text-[#EAF6FF]">{lastRunMeta?.memory ?? "Not run yet"}</p>
                                         </div>
                                     </div>
 
@@ -2409,17 +2440,17 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                         type="button"
                                         onClick={() => setShowOutputModal(true)}
                                         disabled={!output}
-                                        className="inline-flex w-full items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-stone-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-[#111d33] dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-[#16243d] dark:hover:text-white"
+                                        className="inline-flex w-full items-center justify-center rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.55)] px-3 py-2 text-sm font-medium text-[#cfe4f7] transition hover:border-[#00D4FF]/50 hover:bg-[#00D4FF]/[0.08] disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         Open large output
                                     </button>
 
                                     {output ? (
-                                        <div className="rounded-[1.5rem] border border-gray-200/80 bg-white/88 p-5 shadow-sm dark:border-gray-700/80 dark:bg-slate-900/70">
-                                            <div className="font-mono text-sm text-gray-900 dark:text-white">{output}</div>
+                                        <div className="rounded-[1.5rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] backdrop-blur-xl p-5">
+                                            <div className="font-mono text-sm text-[#EAF6FF]">{output}</div>
                                         </div>
                                     ) : (
-                                        <div className="rounded-2xl border border-dashed border-gray-300 bg-white/80 p-5 text-sm leading-7 text-gray-600 dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-400">
+                                        <div className="rounded-2xl border border-dashed border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.35)] p-5 text-sm leading-7 text-[#91A8C3]">
                                             Run your code to see compiler output, runtime messages, and execution stats here.
                                         </div>
                                     )}
@@ -2430,21 +2461,21 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                 session.runHistory.length > 0 ? (
                                     <div className="space-y-3">
                                         {session.runHistory.map((run) => (
-                                            <div key={run.id} className="rounded-[1.4rem] border border-gray-200/80 bg-white p-4 dark:border-gray-700/80 dark:bg-[#0d172b]">
+                                            <div key={run.id} className="rounded-[1.4rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] p-4">
                                                 <div className="flex items-center justify-between gap-3">
                                                     <div className="flex items-center gap-2">
-                                                        <div className={`h-1.5 w-1.5 rounded-full ${run.passed ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                                                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{run.status}</span>
+                                                        <div className={`h-1.5 w-1.5 rounded-full ${run.passed ? 'bg-cyan-300' : 'bg-rose-400'}`}></div>
+                                                        <span className="text-sm font-medium text-[#cfe4f7]">{run.status}</span>
                                                         <span className={`rounded-full px-2 py-0.5 text-xs ${run.sampleCheck === 'passed'
-                                                            ? 'bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-200'
+                                                            ? 'bg-cyan-400/10 text-cyan-200'
                                                             : run.sampleCheck === 'mismatch'
-                                                                ? 'bg-red-50 text-red-700 dark:bg-red-950/20 dark:text-red-200'
-                                                                : 'bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-gray-300'
+                                                                ? 'bg-rose-400/10 text-rose-200'
+                                                                : 'bg-[rgba(0,212,255,0.08)] text-[#91A8C3]'
                                                             }`}>
                                                             {run.sampleCheck === 'passed' ? 'Passed sample' : run.sampleCheck === 'mismatch' ? 'Mismatch' : 'No check'}
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center gap-3 text-xs text-gray-400">
+                                                    <div className="flex items-center gap-3 text-xs text-[#91A8C3]">
                                                         <span>{formatExecutionTime(run.time)}</span>
                                                         <span>{formatMemoryUsage(run.memory)}</span>
                                                     </div>
@@ -2452,14 +2483,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                                 {(run.stdin || run.stdout || run.expectedOutput) && (
                                                     <div className="mt-3 space-y-2">
                                                         {run.stdin ? (
-                                                            <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 px-3 py-2 font-mono text-[11px] text-slate-700 dark:bg-slate-900/70 dark:text-slate-300">{`stdin\n${run.stdin}`}</pre>
+                                                            <pre className="whitespace-pre-wrap rounded-lg bg-[#050c18] px-3 py-2 font-mono text-[11px] text-[#91A8C3]">{`stdin\n${run.stdin}`}</pre>
                                                         ) : null}
                                                         <div className="grid gap-2">
                                                             {run.stdout ? (
-                                                                <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 px-3 py-2 font-mono text-[11px] text-slate-700 dark:bg-slate-900/70 dark:text-slate-300">{`stdout\n${run.stdout}`}</pre>
+                                                                <pre className="whitespace-pre-wrap rounded-lg bg-[#050c18] px-3 py-2 font-mono text-[11px] text-[#91A8C3]">{`stdout\n${run.stdout}`}</pre>
                                                             ) : null}
                                                             {run.expectedOutput ? (
-                                                                <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 px-3 py-2 font-mono text-[11px] text-slate-700 dark:bg-slate-900/70 dark:text-slate-300">{`expected\n${run.expectedOutput}`}</pre>
+                                                                <pre className="whitespace-pre-wrap rounded-lg bg-[#050c18] px-3 py-2 font-mono text-[11px] text-[#91A8C3]">{`expected\n${run.expectedOutput}`}</pre>
                                                             ) : null}
                                                         </div>
                                                     </div>
@@ -2468,7 +2499,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="rounded-2xl border border-dashed border-gray-300 bg-white/80 p-5 text-sm leading-7 text-gray-600 dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-400">
+                                    <div className="rounded-2xl border border-dashed border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.35)] p-5 text-sm leading-7 text-[#91A8C3]">
                                         Run your code to populate the last 5 executions here.
                                     </div>
                                 )
@@ -2476,18 +2507,18 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
 
                             {activeRightTab === "ai" && (
                                 <div className="space-y-5">
-                                    <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
+                                    <p className="text-xs leading-5 text-[#91A8C3]">
                                         Session Intelligence: edge checklist, AI hints, and solution review (same flow as before).
                                     </p>
-                                    <div className="rounded-[1.4rem] border border-gray-200/80 bg-white p-4 dark:border-gray-700/80 dark:bg-[#0d172b]">
+                                    <div className="rounded-[1.4rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] p-4">
                                         <div className="mb-3 flex items-center justify-between gap-3">
-                                            <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Edge Case Checklist</h3>
+                                            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#91A8C3]">Edge Case Checklist</h3>
                                             <div className="flex items-center gap-2 text-[11px]">
-                                                <span className="rounded-full border border-gray-200 bg-white px-2 py-0.5 text-gray-600 dark:border-gray-700 dark:bg-slate-900 dark:text-gray-300">
+                                                <span className="rounded-full border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-2 py-0.5 text-[#91A8C3]">
                                                     {checklistCompleted}/{checklistTotal}
                                                 </span>
                                                 {criticalOpenCount > 0 && (
-                                                    <span className="rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-red-700 dark:border-red-800/50 dark:bg-red-950/20 dark:text-red-300">
+                                                    <span className="rounded-full border border-rose-400/30 bg-rose-400/[0.08] px-2 py-0.5 text-rose-300">
                                                         {criticalOpenCount} critical open
                                                     </span>
                                                 )}
@@ -2495,26 +2526,26 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                         </div>
                                         <div className="grid grid-cols-1 gap-2">
                                             {session.edgeCaseChecklist.map((item) => (
-                                                <label key={item.id} className="group flex cursor-pointer items-start gap-3 rounded-lg border border-transparent px-2 py-1.5 hover:border-gray-200 dark:hover:border-gray-700">
+                                                <label key={item.id} className="group flex cursor-pointer items-start gap-3 rounded-lg border border-transparent px-2 py-1.5 hover:border-[rgba(0,212,255,0.15)]">
                                                     <input
                                                         type="checkbox"
                                                         checked={item.checked}
                                                         onChange={() => toggleEdgeCase(item.id)}
-                                                        className="mt-0.5 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800"
+                                                        className="mt-0.5 h-4 w-4 rounded border-[rgba(0,212,255,0.3)] bg-transparent text-[#00D4FF] focus:ring-[#00D4FF]"
                                                     />
                                                     <div className="min-w-0">
                                                         <div className="flex items-center gap-2">
-                                                            <span className={`text-sm ${item.checked ? 'text-gray-400 line-through' : 'text-gray-700 dark:text-gray-300'}`}>
+                                                            <span className={`text-sm ${item.checked ? 'text-[#91A8C3]/60 line-through' : 'text-[#cfe4f7]'}`}>
                                                                 {item.label}
                                                             </span>
                                                             {!item.checked && item.priority === 'critical' && (
-                                                                <span className="rounded-full border border-red-200 bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-red-700 dark:border-red-800/50 dark:bg-red-950/20 dark:text-red-300">
+                                                                <span className="rounded-full border border-rose-400/30 bg-rose-400/[0.08] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-rose-300">
                                                                     Critical
                                                                 </span>
                                                             )}
                                                         </div>
                                                         {item.hint && (
-                                                            <p className="mt-0.5 text-xs leading-5 text-gray-500 dark:text-gray-400">
+                                                            <p className="mt-0.5 text-xs leading-5 text-[#91A8C3]">
                                                                 {item.hint}
                                                             </p>
                                                         )}
@@ -2528,23 +2559,23 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                         <button
                                             type="button"
                                             onClick={reviewSolution}
-                                            className="inline-flex flex-1 items-center justify-center rounded-xl border border-amber-200 bg-amber-50/90 px-3 py-2 text-sm font-medium text-amber-700 transition hover:bg-amber-100 dark:border-amber-800/40 dark:bg-amber-900/20 dark:text-amber-300 dark:hover:bg-amber-900/30"
+                                            className="inline-flex flex-1 items-center justify-center rounded-xl border border-[#7C5CFF]/35 bg-[#7C5CFF]/[0.1] px-3 py-2 text-sm font-medium text-[#d8ccff] transition hover:bg-[#7C5CFF]/[0.18]"
                                         >
                                             Review solution
                                         </button>
                                         <button
                                             type="button"
                                             onClick={fetchAIHints}
-                                            className="inline-flex flex-1 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-stone-50 hover:text-gray-900 dark:border-gray-700 dark:bg-[#111d33] dark:text-gray-200 dark:hover:border-gray-600 dark:hover:bg-[#16243d] dark:hover:text-white"
+                                            className="inline-flex flex-1 items-center justify-center rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.55)] px-3 py-2 text-sm font-medium text-[#cfe4f7] transition hover:border-[#00D4FF]/50 hover:bg-[#00D4FF]/[0.08]"
                                         >
                                             Refresh AI Hints
                                         </button>
                                     </div>
 
-                                    <div className="rounded-[1.4rem] border border-gray-200/80 bg-white p-4 dark:border-gray-700/80 dark:bg-[#0d172b]">
+                                    <div className="rounded-[1.4rem] border border-[rgba(0,212,255,0.16)] bg-[rgba(16,28,52,0.55)] p-4">
                                         <div className="mb-3 flex items-center justify-between">
-                                            <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">AI Hints</h3>
-                                            {isLoading ? <span className="text-[10px] text-amber-500">Loading...</span> : null}
+                                            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#91A8C3]">AI Hints</h3>
+                                            {isLoading ? <span className="text-[10px] text-[#00D4FF]">Loading...</span> : null}
                                         </div>
                                         {aiHints.length > 0 ? (
                                             <div className="space-y-2">
@@ -2553,14 +2584,14 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                                         key={index}
                                                         type="button"
                                                         onClick={() => applyHint(hint)}
-                                                        className="w-full rounded-xl border border-gray-200 bg-white/80 p-3 text-left text-sm text-gray-700 transition hover:border-amber-200 hover:bg-amber-50/70 dark:border-gray-700 dark:bg-slate-900/50 dark:text-gray-200 dark:hover:border-amber-800/40 dark:hover:bg-amber-900/10"
+                                                        className="w-full rounded-xl border border-[rgba(0,212,255,0.15)] bg-[rgba(16,28,52,0.4)] p-3 text-left text-sm text-[#cfe4f7] transition hover:border-[#00D4FF]/40 hover:bg-[#00D4FF]/[0.06]"
                                                     >
                                                         {hint}
                                                     </button>
                                                 ))}
                                             </div>
                                         ) : (
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">No suggestions available right now.</p>
+                                            <p className="text-sm text-[#91A8C3]">No suggestions available right now.</p>
                                         )}
                                     </div>
 
@@ -2587,7 +2618,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                             type="button"
                                             disabled={reportLoading}
                                             onClick={() => generateSessionReport({ endSession: false })}
-                                            className="inline-flex flex-1 min-w-[8rem] items-center justify-center rounded-xl border border-amber-200 bg-amber-50/90 px-3 py-2 text-sm font-medium text-amber-800 transition hover:bg-amber-100 disabled:opacity-60 dark:border-amber-800/40 dark:bg-amber-900/25 dark:text-amber-200 dark:hover:bg-amber-900/35"
+                                            className="inline-flex flex-1 min-w-[8rem] items-center justify-center rounded-xl border border-[#00D4FF]/35 bg-[#00D4FF]/[0.1] px-3 py-2 text-sm font-medium text-[#7dd3fc] transition hover:bg-[#00D4FF]/[0.18] disabled:opacity-60"
                                         >
                                             {reportLoading ? "Working…" : "Generate Report"}
                                         </button>
@@ -2600,7 +2631,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                                     endReason: "manual_end",
                                                 })
                                             }
-                                            className="inline-flex flex-1 min-w-[8rem] items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-stone-50 disabled:opacity-60 dark:border-gray-700 dark:bg-[#111d33] dark:text-gray-200 dark:hover:bg-[#16243d]"
+                                            className="inline-flex flex-1 min-w-[8rem] items-center justify-center rounded-xl border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.55)] px-3 py-2 text-sm font-medium text-[#cfe4f7] transition hover:bg-[#00D4FF]/[0.08] disabled:opacity-60"
                                         >
                                             Generate and end session
                                         </button>
@@ -2609,12 +2640,12 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                         type="button"
                                         disabled={reportLoading}
                                         onClick={() => generateSessionReport({ wholeRoom: true })}
-                                        className="w-full rounded-xl border border-dashed border-gray-300 px-3 py-2 text-xs font-medium text-gray-600 hover:bg-stone-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-slate-800/60"
+                                        className="w-full rounded-xl border border-dashed border-[rgba(0,212,255,0.2)] px-3 py-2 text-xs font-medium text-[#91A8C3] hover:bg-[rgba(16,28,52,0.4)]"
                                     >
                                         Use whole-room activity (all participants)
                                     </button>
                                     {!lastShareId ? (
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        <p className="text-xs text-[#91A8C3]">
                                             Generate a report to get a shareable link. Sign in to keep reports in History → Analysis Reports.
                                         </p>
                                     ) : null}
@@ -2623,15 +2654,15 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                         <div
                                             ref={reportCardTiltRef}
                                             data-cursor="card"
-                                            className={`relative rounded-[1.5rem] border border-amber-200/35 bg-gradient-to-b from-amber-50/40 to-transparent p-1 shadow-[0_8px_40px_-16px_rgba(245,158,11,0.35)] ring-1 ring-amber-400/15 transition-[box-shadow,ring] duration-500 dark:border-amber-900/40 dark:from-amber-950/25 dark:shadow-[0_12px_48px_-20px_rgba(0,0,0,0.75)] dark:ring-amber-500/10 ${isNewReport && activeRightTab === "report" ? "ring-2 ring-amber-400/60 shadow-[0_12px_48px_-12px_rgba(251,191,36,0.55)] dark:shadow-[0_16px_56px_-16px_rgba(251,191,36,0.25)]" : ""}`}
+                                            className={`relative rounded-[1.5rem] border border-[#00D4FF]/25 bg-gradient-to-b from-[#00D4FF]/[0.06] to-transparent p-1 shadow-[0_0_40px_-16px_rgba(0,212,255,0.4)] ring-1 ring-[#00D4FF]/15 transition-[box-shadow,ring] duration-500 ${isNewReport && activeRightTab === "report" ? "ring-2 ring-[#00D4FF]/60 shadow-[0_0_48px_-12px_rgba(0,212,255,0.6)]" : ""}`}
                                             style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
                                         >
-                                            <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 rounded-t-[1.25rem] border-b border-amber-200/40 bg-white/90 px-3 py-2.5 backdrop-blur-md dark:border-amber-900/35 dark:bg-[#0a1324]/92">
-                                                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
+                                            <div className="sticky top-0 z-20 flex flex-wrap items-center justify-between gap-2 rounded-t-[1.25rem] border-b border-[#00D4FF]/20 bg-[rgba(8,17,32,0.9)] px-3 py-2.5 backdrop-blur-md">
+                                                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#91A8C3]">
                                                     Session report
                                                 </span>
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold tabular-nums text-amber-950 dark:bg-amber-900/50 dark:text-amber-100">
+                                                    <span className="rounded-full bg-gradient-to-r from-[#00D4FF] to-[#1E90FF] px-2.5 py-1 text-xs font-bold tabular-nums text-[#081120]">
                                                         {lastReportPayload.sessionScore}
                                                     </span>
                                                     {lastShareId ? (
@@ -2642,7 +2673,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                                                 await navigator.clipboard.writeText(url);
                                                                 toast.success("Share link copied");
                                                             }}
-                                                            className="rounded-lg border border-gray-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-gray-700 transition hover:bg-stone-50 dark:border-gray-600 dark:bg-slate-900 dark:text-gray-200 dark:hover:bg-slate-800"
+                                                            className="rounded-lg border border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.6)] px-2.5 py-1 text-[11px] font-semibold text-[#cfe4f7] transition hover:border-[#00D4FF]/50"
                                                         >
                                                             Copy link
                                                         </button>
@@ -2659,15 +2690,15 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                                     }
                                                     variant="embedded"
                                                 />
-                                                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-gray-200/70 pt-3 dark:border-gray-700/70">
-                                                    <p className="text-[10px] text-gray-500 dark:text-gray-400">
+                                                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[rgba(0,212,255,0.14)] pt-3">
+                                                    <p className="text-[10px] text-[#91A8C3]">
                                                         Screenshot-friendly layout · share from Copy link
                                                     </p>
                                                     <button
                                                         type="button"
                                                         disabled={reportLoading}
                                                         onClick={() => generateSessionReport({ endSession: false })}
-                                                        className="text-[11px] font-semibold text-amber-700 underline-offset-2 hover:underline disabled:opacity-50 dark:text-amber-300"
+                                                        className="text-[11px] font-semibold text-[#00D4FF] underline-offset-2 hover:underline disabled:opacity-50"
                                                     >
                                                         Regenerate
                                                     </button>
@@ -2675,7 +2706,7 @@ function Workspace({ socketRef, roomId, roomState, currentSocketId, currentRole 
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="rounded-2xl border border-dashed border-gray-300 bg-white/80 p-5 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-900/60 dark:text-gray-400">
+                                        <div className="rounded-2xl border border-dashed border-[rgba(0,212,255,0.2)] bg-[rgba(16,28,52,0.35)] p-5 text-sm text-[#91A8C3]">
                                             Run code, submit samples, or run a signed-in solution review, then generate your report here.
                                         </div>
                                     )}

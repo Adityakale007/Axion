@@ -40,7 +40,7 @@ function humanizePlannerWarning(message = "") {
     return "Hidden-test planning fell back to safe defaults.";
   }
   if (/quota exceeded|rate.?limit|429/i.test(normalized)) {
-    return "AI planner quota is unavailable right now, so ForkSpace used built-in fallback hidden tests instead.";
+    return "AI planner quota is unavailable right now, so Axion used built-in fallback hidden tests instead.";
   }
   return normalized;
 }

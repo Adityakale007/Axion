@@ -49,7 +49,7 @@ function MockSummaryPage() {
                             to="/"
                             className="rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
                         >
-                            Back to ForkSpace
+                            Back to Axion
                         </Link>
                     </div>
                 </div>

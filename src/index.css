@@ -22,18 +22,18 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(245, 158, 11, 0.25);
+  background: rgba(0, 212, 255, 0.3);
   border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.4);
+  background: rgba(0, 212, 255, 0.5);
 }
 
 /* Selection highlight */
 ::selection {
-  background: rgba(245, 158, 11, 0.25);
-  color: #f8fafc;
+  background: rgba(0, 212, 255, 0.28);
+  color: #EAF6FF;
 }
 
 /* Smooth scroll */
@@ -74,6 +74,8 @@ a,
   transform: translateY(0);
 }
 
+/* Ambient background blobs — cyan/electric-blue/purple to match the
+   neon mission-control identity instead of the old warm palette. */
 @keyframes floatBlob1 {
   0%, 100% { transform: translate(0, 0) scale(1); }
   33% { transform: translate(30px, -20px) scale(1.05); }
@@ -95,9 +97,11 @@ a,
   50% { opacity: 1; }
 }
 
+/* Success/error button flashes keep semantic green/red so pass/fail
+   states remain unambiguous across the app. */
 @keyframes buttonSuccess {
   0% { background: inherit; }
-  30% { background: rgba(16, 185, 129, 0.3); }
+  30% { background: rgba(0, 245, 255, 0.28); }
   100% { background: inherit; }
 }
 

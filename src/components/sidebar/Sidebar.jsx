@@ -4,6 +4,7 @@ import User from '../common/User';
 import { Link, useLocation, Navigate, useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 import { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const PLATFORM_OPTIONS = [
     { value: 'codeforces', label: 'Codeforces' },
@@ -78,6 +79,12 @@ const SESSION_MODE_HELP = {
     mentoring: 'Mentor leads the editor. Learner stays read-only and focuses on the approach.',
 };
 
+/* Shared style primitives — kept local to this file so nothing else needs to change. */
+const glassCard = 'rounded-[1.4rem] border border-[rgba(0,212,255,0.14)] bg-[rgba(16,28,52,0.55)] backdrop-blur-xl';
+const glassInput =
+    'w-full rounded-xl border border-[rgba(0,212,255,0.16)] bg-[#0b1526]/80 px-3 py-2 text-sm text-[#EAF6FF] placeholder:text-[#4c6079] outline-none transition-all duration-200 focus:border-[#00D4FF]/60 focus:shadow-[0_0_0_3px_rgba(0,212,255,0.12)]';
+const eyebrow = 'text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6f88a8]';
+
 function ImportProblemModal({
     isOpen,
     onClose,
@@ -90,20 +97,23 @@ function ImportProblemModal({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
-            <div className="w-full max-w-2xl overflow-hidden rounded-[1.8rem] border border-stone-200 bg-white shadow-[0_28px_120px_-42px_rgba(15,23,42,0.5)] dark:border-slate-700 dark:bg-[#081121]">
-                <div className="flex items-start justify-between gap-4 border-b border-stone-200 px-5 py-4 dark:border-slate-700">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-[#020509]/70 p-4 backdrop-blur-md">
+            <div
+                className="axn-modal-in relative w-full max-w-2xl overflow-hidden rounded-[1.8rem] border border-[rgba(0,212,255,0.18)] bg-[#0b1526]/95 shadow-[0_28px_120px_-30px_rgba(0,0,0,0.85),0_0_60px_-20px_rgba(0,212,255,0.15)] backdrop-blur-2xl"
+            >
+                <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/50 to-transparent" />
+                <div className="flex items-start justify-between gap-4 border-b border-[rgba(0,212,255,0.1)] px-5 py-4">
                     <div>
-                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-600 dark:text-amber-400">Import Helper</p>
-                        <h3 className="mt-1 text-xl font-semibold text-slate-900 dark:text-white">Import Problem</h3>
-                        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#00D4FF]">Import Helper</p>
+                        <h3 className="mt-1 text-xl font-semibold text-[#EAF6FF]">Import Problem</h3>
+                        <p className="mt-2 text-sm leading-6 text-[#91A8C3]">
                             Keep import as a helper, then continue editing the shared brief manually.
                         </p>
                     </div>
                     <button
                         type="button"
                         onClick={onClose}
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-stone-200 bg-white text-stone-600 transition hover:border-stone-300 hover:text-stone-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-white"
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(0,212,255,0.14)] bg-white/[0.02] text-[#91A8C3] transition-all duration-200 hover:border-[#00D4FF]/40 hover:text-[#EAF6FF]"
                         aria-label="Close import modal"
                     >
                         <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -113,18 +123,24 @@ function ImportProblemModal({
                 </div>
 
                 <div className="space-y-4 p-5">
-                    {importNotice && (
-                        <div className="rounded-xl border border-amber-200 bg-amber-50/90 p-3 text-sm leading-6 text-amber-900 dark:border-amber-800/60 dark:bg-amber-950/30 dark:text-amber-100">
-                            {importNotice}
-                        </div>
-                    )}
+                    <AnimatePresence>
+                        {importNotice && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -6 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -6 }}
+                                transition={{ duration: 0.18 }}
+                                className="rounded-xl border border-[#00D4FF]/25 bg-[#00D4FF]/[0.06] p-3 text-sm leading-6 text-[#c9ecff]"
+                            >
+                                {importNotice}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
-                    <div className="rounded-[1.35rem] border border-stone-200/80 bg-stone-50 p-4 dark:border-slate-700/80 dark:bg-[#0d172b]">
+                    <div className={`${glassCard} p-4`}>
                         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_110px]">
                             <label className="space-y-1.5">
-                                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                    Platform
-                                </span>
+                                <span className={eyebrow}>Platform</span>
                                 <select
                                     value={problemDraft.platform}
                                     onChange={(event) => {
@@ -136,19 +152,17 @@ function ImportProblemModal({
                                             title: formatProblemTitle(nextPlatform, prev.problemCode, prev.title),
                                         }));
                                     }}
-                                    className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                    className={glassInput}
                                 >
                                     {PLATFORM_OPTIONS.map((option) => (
-                                        <option key={option.value} value={option.value}>
+                                        <option key={option.value} value={option.value} className="bg-[#0b1526]">
                                             {option.label}
                                         </option>
                                     ))}
                                 </select>
                             </label>
                             <label className="space-y-1.5">
-                                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                    Problem Code
-                                </span>
+                                <span className={eyebrow}>Problem Code</span>
                                 <input
                                     type="text"
                                     value={problemDraft.problemCode}
@@ -165,7 +179,7 @@ function ImportProblemModal({
                                         }));
                                     }}
                                     placeholder="1885A"
-                                    className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                    className={glassInput}
                                 />
                             </label>
                         </div>
@@ -173,7 +187,7 @@ function ImportProblemModal({
                             type="button"
                             onClick={onImportProblem}
                             disabled={isImporting || !problemDraft.problemCode.trim()}
-                            className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-300 hover:bg-stone-100 hover:text-stone-900 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:text-white"
+                            className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-[rgba(0,212,255,0.18)] bg-gradient-to-r from-[#0f213e] to-[#0c1a30] px-3 py-2 text-sm font-medium text-[#EAF6FF] transition-all duration-200 hover:border-[#00D4FF]/45 hover:shadow-[0_0_20px_-6px_rgba(0,212,255,0.5)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-none"
                         >
                             {isImporting ? 'Importing problem...' : 'Import by Platform + Code'}
                         </button>
@@ -183,7 +197,7 @@ function ImportProblemModal({
                         <button
                             type="button"
                             onClick={onClose}
-                            className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                            className="rounded-xl bg-gradient-to-r from-[#00D4FF] to-[#1E90FF] px-4 py-2.5 text-sm font-semibold text-[#04101f] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_24px_-6px_rgba(0,212,255,0.6)] active:scale-[0.98]"
                         >
                             Back to brief
                         </button>
@@ -512,7 +526,41 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
         snap?.difficultyLabel || problemDraft.difficultyLabel || problemDraft.difficulty || '';
 
     return (
-        <div className="flex h-full w-full flex-col border-r border-white/10 bg-transparent dark:bg-transparent">
+        <div className="relative flex h-full w-full flex-col overflow-hidden border-r border-[rgba(0,212,255,0.1)] bg-[#081120]">
+            {/* Scoped effects for this component */}
+            <style>{`
+                @keyframes axn-edge-glow {
+                    0%, 100% { opacity: 0.35; }
+                    50% { opacity: 0.7; }
+                }
+                @keyframes axn-modal-pop {
+                    from { opacity: 0; transform: scale(0.97) translateY(4px); }
+                    to { opacity: 1; transform: scale(1) translateY(0); }
+                }
+                .axn-modal-in { animation: axn-modal-pop 0.18s ease-out; }
+                .axn-sidebar-edge {
+                    animation: axn-edge-glow 5s ease-in-out infinite;
+                }
+                .axn-sidebar-grid {
+                    background-image:
+                        linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+                    background-size: 34px 34px;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                    .axn-sidebar-edge { animation: none; }
+                }
+            `}</style>
+
+            {/* Ambient depth layer — sits behind all content, never intercepts clicks */}
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                <div className="axn-sidebar-grid absolute inset-0 opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+                <div className="absolute -left-24 top-10 h-64 w-64 rounded-full bg-[#1E90FF]/10 blur-[90px]" />
+                <div className="absolute -right-20 top-1/2 h-72 w-72 rounded-full bg-[#7C5CFF]/10 blur-[100px]" />
+                <div className="absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-[#00F5FF]/10 blur-[90px]" />
+                <div className="axn-sidebar-edge absolute right-0 top-0 h-full w-px bg-gradient-to-b from-transparent via-[#00D4FF] to-transparent" />
+            </div>
+
             <ImportProblemModal
                 isOpen={showImportModal}
                 onClose={() => setShowImportModal(false)}
@@ -522,21 +570,34 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                 importNotice={importNotice}
                 onImportProblem={handleImportProblem}
             />
-            <div className="flex-1 min-h-0 overflow-y-auto scroll-smooth">
+
+            <div className="relative flex-1 min-h-0 overflow-y-auto scroll-smooth">
                 <div className="flex flex-col space-y-4 p-4 sm:p-5">
+                    {/* Brand / room identity */}
                     <div className="flex w-full items-center gap-1.5">
-                        <Link to="/" className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/15 bg-white/5 transition hover:bg-white/10">
-                            <img src="/logo.png" alt="ForkSpace logo" className="h-6 w-6 brightness-0 invert" />
+                        <Link
+                            to="/"
+                            className="group relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[rgba(0,212,255,0.16)] bg-white/[0.03] transition-all duration-200 hover:border-[#00D4FF]/50"
+                        >
+                            <span className="pointer-events-none absolute -inset-1 rounded-xl bg-[#00D4FF]/25 opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-60" />
+                            <div className="axn-logo-aura absolute -inset-1.5 rounded-xl bg-gradient-to-br from-indigo-500/50 via-violet-500/40 to-cyan-400/40 blur-md" />
+                                <div className="relative rounded-xl bg-[#080b17] p-1 ring-1 ring-white/10">
+                                    <img
+                                        src="/logo.png"
+                                        alt="Axion logo"
+                                        className="h-8 w-8 rounded-lg object-contain"
+                                    />
+                                </div>
                         </Link>
-                        <div className="flex h-10 min-w-0 flex-1 items-center justify-between gap-1.5 rounded-full border border-white/15 bg-white/5 px-2 dark:bg-white/[0.04]">
-                            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-gray-400">Room</span>
-                            <code className="min-w-0 truncate rounded-full bg-white/10 px-1.5 py-0.5 font-mono text-[11px] text-gray-100">
+                        <div className="flex h-10 min-w-0 flex-1 items-center justify-between gap-1.5 rounded-full border border-[rgba(0,212,255,0.14)] bg-white/[0.02] px-2">
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#6f88a8]">Room</span>
+                            <code className="min-w-0 truncate rounded-full bg-[#00D4FF]/[0.08] px-1.5 py-0.5 font-mono text-[11px] text-[#c9ecff]">
                                 {roomId}
                             </code>
                             <button
                                 type="button"
                                 onClick={handleCopyRoomId}
-                                className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/20 bg-white/10 text-gray-200 transition hover:bg-white/20"
+                                className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-[rgba(0,212,255,0.16)] bg-white/[0.03] text-[#91A8C3] transition-all duration-200 hover:border-[#00D4FF]/45 hover:text-[#EAF6FF] hover:shadow-[0_0_10px_-3px_rgba(0,212,255,0.6)]"
                                 title="Copy room ID"
                                 aria-label="Copy room ID"
                             >
@@ -547,28 +608,24 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                             </button>
                         </div>
                     </div>
-                    <div className="rounded-[1.6rem] border border-stone-200/80 bg-white p-5 shadow-[0_16px_42px_-28px_rgba(15,23,42,0.22)] dark:border-slate-700/80 dark:bg-[#081121]">
+
+                    {/* Brief panel */}
+                    <div className={`${glassCard} p-5 shadow-[0_20px_60px_-35px_rgba(0,0,0,0.9)]`}>
                         <div className="mb-4 flex items-center justify-between">
-                            <div>
-                                <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-                                    Brief
-                                </h3>
-                            </div>
-                            <span className="rounded-full bg-stone-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-600 dark:bg-[#111d33] dark:text-slate-300">
+                            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#91A8C3]">Brief</h3>
+                            <span className="rounded-full border border-[rgba(0,212,255,0.2)] bg-[#00D4FF]/[0.06] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7fe0ff]">
                                 Shared
                             </span>
                         </div>
 
-                        <div className="mb-3 rounded-[1.2rem] border border-stone-200/70 bg-white/90 p-3 dark:border-slate-700/80 dark:bg-[#0d172b]">
+                        <div className={`mb-3 rounded-[1.2rem] border border-[rgba(0,212,255,0.1)] bg-[#0b1526]/70 p-3`}>
                             <div className="flex flex-wrap items-center justify-between gap-2">
-                                <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                    Problem source
-                                </span>
+                                <span className={eyebrow}>Problem source</span>
                                 <span
                                     className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${
                                         problemDraft.problemSource === 'codeforces'
-                                            ? 'bg-amber-100 text-amber-900 dark:bg-amber-500/20 dark:text-amber-100'
-                                            : 'bg-stone-100 text-stone-700 dark:bg-slate-800 dark:text-slate-200'
+                                            ? 'border border-[#7C5CFF]/30 bg-[#7C5CFF]/[0.1] text-[#c9b9ff]'
+                                            : 'border border-white/10 bg-white/[0.03] text-[#91A8C3]'
                                     }`}
                                 >
                                     {problemDraft.problemSource === 'codeforces' ? 'Codeforces' : 'Manual'}
@@ -581,26 +638,26 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                             {metaTags.slice(0, 12).map((t) => (
                                                 <span
                                                     key={t}
-                                                    className="rounded-full bg-stone-100 px-2 py-0.5 text-[11px] text-stone-700 dark:bg-slate-800 dark:text-slate-200"
+                                                    className="rounded-full border border-[rgba(0,212,255,0.14)] bg-white/[0.03] px-2 py-0.5 text-[11px] text-[#c3d6ea]"
                                                 >
                                                     {t}
                                                 </span>
                                             ))}
                                         </div>
                                     )}
-                                    <div className="flex flex-wrap gap-2 text-[11px] text-stone-600 dark:text-slate-400">
+                                    <div className="flex flex-wrap gap-2 text-[11px] text-[#91A8C3]">
                                         {metaRating ? (
-                                            <span className="rounded-md bg-stone-50 px-2 py-0.5 dark:bg-slate-900/80">
+                                            <span className="rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-0.5 font-mono">
                                                 Rating {metaRating}
                                             </span>
                                         ) : null}
                                         {metaDifficulty ? (
-                                            <span className="rounded-md bg-stone-50 px-2 py-0.5 dark:bg-slate-900/80">
+                                            <span className="rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-0.5">
                                                 {metaDifficulty}
                                             </span>
                                         ) : null}
                                         {metaSolved != null ? (
-                                            <span className="rounded-md bg-stone-50 px-2 py-0.5 dark:bg-slate-900/80">
+                                            <span className="rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-0.5 font-mono">
                                                 {metaSolved.toLocaleString()} solves
                                             </span>
                                         ) : null}
@@ -611,54 +668,65 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                 <button
                                     type="button"
                                     onClick={() => setShowCfInlineForm((v) => !v)}
-                                    className="rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-800 transition hover:border-amber-300 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100"
+                                    className="rounded-xl border border-[rgba(0,212,255,0.16)] bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-[#c3d6ea] transition-all duration-200 hover:border-[#00D4FF]/40 hover:text-[#EAF6FF]"
                                 >
                                     Browse Codeforces
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleSwitchToManualBrief}
-                                    className="rounded-xl border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-medium text-stone-700 transition hover:bg-white dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+                                    className="rounded-xl border border-white/[0.06] bg-white/[0.015] px-3 py-1.5 text-xs font-medium text-[#91A8C3] transition-all duration-200 hover:border-white/20 hover:text-[#EAF6FF]"
                                 >
                                     Use manual brief
                                 </button>
                                 <button
                                     type="button"
                                     onClick={handleResetBrief}
-                                    className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-medium text-rose-700 transition hover:bg-white dark:border-rose-800/40 dark:bg-rose-950/20 dark:text-rose-200 dark:hover:bg-rose-900/40"
+                                    className="rounded-xl border border-rose-500/25 bg-rose-500/[0.06] px-3 py-1.5 text-xs font-medium text-rose-300 transition-all duration-200 hover:border-rose-400/40 hover:bg-rose-500/[0.1]"
                                     title="Clear all problem details"
                                 >
                                     Reset Brief
                                 </button>
                             </div>
-                            {showCfInlineForm ? (
-                                <div className="mt-3 rounded-xl border border-stone-200/80 bg-stone-50/80 p-3 dark:border-slate-700 dark:bg-slate-900/40">
-                                    <p className="text-[11px] font-medium text-gray-500">Paste Codeforces URL</p>
-                                    <div className="mt-2 flex gap-2">
-                                        <input
-                                            type="url"
-                                            value={problemDraft.problemUrl}
-                                            onChange={(event) => updateProblemDraft((prev) => ({ ...prev, problemUrl: event.target.value }))}
-                                            placeholder="https://codeforces.com/problemset/problem/1/A"
-                                            className="min-w-0 flex-1 rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={handleLoadCfUrl}
-                                            disabled={isImporting}
-                                            className="rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-100 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200"
-                                        >
-                                            {isImporting ? 'Loading...' : 'Load'}
-                                        </button>
-                                    </div>
-                                </div>
-                            ) : null}
+                            <AnimatePresence>
+                                {showCfInlineForm ? (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.2, ease: 'easeOut' }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="mt-3 rounded-xl border border-[rgba(0,212,255,0.12)] bg-white/[0.02] p-3">
+                                            <p className="text-[11px] font-medium text-[#6f88a8]">Paste Problem URL</p>
+                                            <div className="mt-2 flex gap-2">
+                                                <input
+                                                    type="url"
+                                                    value={problemDraft.problemUrl}
+                                                    onChange={(event) => updateProblemDraft((prev) => ({ ...prev, problemUrl: event.target.value }))}
+                                                    placeholder="https://codeforces.com/problemset/problem/1/A"
+                                                    className={`min-w-0 flex-1 ${glassInput}`}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={handleLoadCfUrl}
+                                                    disabled={isImporting}
+                                                    className="rounded-lg border border-[rgba(0,212,255,0.16)] bg-white/[0.02] px-3 py-2 text-sm font-medium text-[#c3d6ea] transition-all duration-200 hover:border-[#00D4FF]/40 disabled:opacity-60"
+                                                >
+                                                    {isImporting ? 'Loading...' : 'Load'}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                ) : null}
+                            </AnimatePresence>
                         </div>
 
-                        <div className="relative mb-4 grid grid-cols-2 gap-2 rounded-[1.2rem] border border-stone-200/80 bg-stone-50 p-1 dark:border-slate-700/80 dark:bg-[#0d172b]">
+                        {/* Tabs */}
+                        <div className="relative mb-4 grid grid-cols-2 gap-2 rounded-[1.2rem] border border-white/[0.06] bg-[#0b1526]/70 p-1">
                             <div
                                 aria-hidden="true"
-                                className="absolute bottom-1 h-0.5 rounded-full bg-amber-400"
+                                className="absolute bottom-1 h-0.5 rounded-full bg-gradient-to-r from-[#00D4FF] to-[#7C5CFF] shadow-[0_0_10px_rgba(0,212,255,0.8)]"
                                 style={{
                                     left: `${tabIndicator.left}px`,
                                     width: `${tabIndicator.width}px`,
@@ -672,10 +740,8 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                 type="button"
                                 onClick={() => setActiveTab('problem')}
                                 data-cursor="button"
-                                className={`rounded-[0.95rem] border-b-2 px-3 py-2 text-sm transition ${
-                                    activeTab === 'problem'
-                                        ? 'border-amber-400 text-white font-medium'
-                                        : 'border-transparent text-gray-500 hover:text-gray-300'
+                                className={`rounded-[0.95rem] px-3 py-2 text-sm transition-colors duration-200 ${
+                                    activeTab === 'problem' ? 'font-medium text-[#EAF6FF]' : 'text-[#6f88a8] hover:text-[#c3d6ea]'
                                 }`}
                             >
                                 Problem
@@ -687,10 +753,8 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                 type="button"
                                 onClick={() => setActiveTab('session')}
                                 data-cursor="button"
-                                className={`rounded-[0.95rem] border-b-2 px-3 py-2 text-sm transition ${
-                                    activeTab === 'session'
-                                        ? 'border-amber-400 text-white font-medium'
-                                        : 'border-transparent text-gray-500 hover:text-gray-300'
+                                className={`rounded-[0.95rem] px-3 py-2 text-sm transition-colors duration-200 ${
+                                    activeTab === 'session' ? 'font-medium text-[#EAF6FF]' : 'text-[#6f88a8] hover:text-[#c3d6ea]'
                                 }`}
                             >
                                 Session
@@ -700,35 +764,29 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                         <div className="space-y-3">
                             {activeTab === 'problem' ? (
                                 <>
-                                    <div className="space-y-3 rounded-[1.35rem] border border-stone-200/80 bg-stone-50 p-4 dark:border-slate-700/80 dark:bg-[#0d172b]">
+                                    <div className={`space-y-3 rounded-[1.35rem] border border-white/[0.06] bg-[#0b1526]/70 p-4`}>
                                         <div>
-                                            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                Problem Title
-                                            </p>
+                                            <p className={eyebrow}>Problem Title</p>
                                             <input
                                                 type="text"
                                                 value={problemDraft.title}
                                                 onChange={(event) => updateProblemDraft((prev) => ({ ...prev, title: event.target.value }))}
                                                 placeholder="Problem title"
-                                                className="mt-1.5 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                className={`mt-1.5 ${glassInput}`}
                                             />
                                         </div>
                                         <div>
-                                            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                Constraints
-                                            </p>
+                                            <p className={eyebrow}>Constraints</p>
                                             <textarea
                                                 value={problemDraft.constraints}
                                                 onChange={(event) => updateProblemDraft((prev) => ({ ...prev, constraints: event.target.value }))}
                                                 placeholder="1 <= n <= 2e5, values can be negative, sum fits in 64-bit..."
-                                                className="mt-1.5 h-20 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                className={`mt-1.5 h-20 ${glassInput}`}
                                             />
                                         </div>
                                         <div className="grid gap-3 sm:grid-cols-2">
                                             <div>
-                                                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                    Tags (comma-separated)
-                                                </p>
+                                                <p className={eyebrow}>Tags (comma-separated)</p>
                                                 <input
                                                     type="text"
                                                     value={Array.isArray(problemDraft.tags) ? problemDraft.tags.join(', ') : ''}
@@ -742,13 +800,11 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                                         }))
                                                     }
                                                     placeholder="dp, greedy, graphs"
-                                                    className="mt-1.5 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                    className={`mt-1.5 ${glassInput}`}
                                                 />
                                             </div>
                                             <div>
-                                                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                    Rating / difficulty
-                                                </p>
+                                                <p className={eyebrow}>Rating / difficulty</p>
                                                 <input
                                                     type="text"
                                                     value={problemDraft.rating || ''}
@@ -760,53 +816,49 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                                         }))
                                                     }
                                                     placeholder="e.g. 1200, Medium"
-                                                    className="mt-1.5 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                    className={`mt-1.5 ${glassInput}`}
                                                 />
                                             </div>
                                         </div>
                                         {problemDraft.sourceUrl ? (
-                                            <div className="mt-2 rounded-md border border-white/10 bg-white/5 p-2">
-                                                <p className="mb-1 text-[11px] text-gray-400">
+                                            <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
+                                                <p className="mb-1 text-[11px] text-[#6f88a8]">
                                                     Statement and test cases aren&apos;t available via API.
                                                 </p>
                                                 <a
                                                     href={problemDraft.sourceUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="text-[11px] text-amber-400 underline hover:text-amber-300"
+                                                    className="text-[11px] text-[#00D4FF] underline hover:text-[#7fe0ff]"
                                                 >
                                                     Open problem on Codeforces →
                                                 </a>
-                                                <p className="mt-1 text-[11px] text-gray-500">
+                                                <p className="mt-1 text-[11px] text-[#6f88a8]">
                                                     Copy the statement into Prompt, paste sample I/O into the fields below.
                                                 </p>
                                             </div>
                                         ) : null}
                                     </div>
                                     <div className="grid gap-3">
-                                        <div className="rounded-[1.35rem] border border-stone-200/80 bg-stone-50 p-4 dark:border-slate-700/80 dark:bg-[#0d172b]">
+                                        <div className={`rounded-[1.35rem] border border-white/[0.06] bg-[#0b1526]/70 p-4`}>
                                             <div className="mb-3 flex items-center justify-between">
-                                                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-600 dark:text-gray-300">Prompt and sample tests</p>
-                                                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-700 dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-200">
+                                                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#6f88a8]">Prompt and sample tests</p>
+                                                <span className="rounded-full border border-[#00F5FF]/25 bg-[#00F5FF]/[0.06] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8ff2f2]">
                                                     Always visible
                                                 </span>
                                             </div>
                                             <label className="space-y-1.5">
-                                                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                    Prompt
-                                                </span>
+                                                <span className={eyebrow}>Prompt</span>
                                                 <textarea
                                                     value={problemDraft.prompt}
                                                     onChange={(event) => updateProblemDraft((prev) => ({ ...prev, prompt: event.target.value }))}
                                                     placeholder="Paste the full problem statement or the exact prompt you want to solve."
-                                                    className="min-h-[12rem] w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm leading-7 text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                    className={`min-h-[12rem] leading-7 ${glassInput}`}
                                                 />
                                             </label>
                                             <div className="mt-3 space-y-3">
                                                 <label className="space-y-1.5">
-                                                    <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                        Input
-                                                    </span>
+                                                    <span className={eyebrow}>Input</span>
                                                     <textarea
                                                         value={problemDraft.sampleInput}
                                                         onChange={(event) =>
@@ -820,13 +872,11 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                                             })
                                                         }
                                                         placeholder="Paste the sample input here"
-                                                        className="h-36 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 font-mono text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                        className={`h-36 font-mono ${glassInput}`}
                                                     />
                                                 </label>
                                                 <label className="space-y-1.5">
-                                                    <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                        Expected Output
-                                                    </span>
+                                                    <span className={eyebrow}>Expected Output</span>
                                                     <textarea
                                                         value={problemDraft.sampleOutput}
                                                         onChange={(event) =>
@@ -840,67 +890,69 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                                             })
                                                         }
                                                         placeholder="Paste the expected output here"
-                                                        className="h-36 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 font-mono text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                        className={`h-36 font-mono ${glassInput}`}
                                                     />
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
-                                    {problemDraft.samples?.length > 0 && (
-                                        <div className="flex items-center justify-between rounded-xl border border-dashed border-stone-300 bg-white/80 p-3 dark:border-slate-700 dark:bg-slate-900/50">
-                                            <div>
-                                                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                    Parsed Samples
-                                                </p>
-                                                <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-                                                    {problemDraft.samples.length} sample {problemDraft.samples.length === 1 ? 'test' : 'tests'} ready for suite runs.
-                                                </p>
-                                            </div>
-                                            <span className="rounded-full border border-stone-200 bg-white px-2.5 py-1 text-xs font-semibold text-stone-700 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200">
-                                                Ready
-                                            </span>
-                                        </div>
-                                    )}
+                                    <AnimatePresence>
+                                        {problemDraft.samples?.length > 0 && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 6 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 6 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="flex items-center justify-between rounded-xl border border-dashed border-[rgba(0,212,255,0.2)] bg-white/[0.015] p-3"
+                                            >
+                                                <div>
+                                                    <p className={eyebrow}>Parsed Samples</p>
+                                                    <p className="mt-1 text-sm text-[#c3d6ea]">
+                                                        {problemDraft.samples.length} sample {problemDraft.samples.length === 1 ? 'test' : 'tests'} ready for suite runs.
+                                                    </p>
+                                                </div>
+                                                <span className="rounded-full border border-[#00D4FF]/25 bg-[#00D4FF]/[0.06] px-2.5 py-1 text-xs font-semibold text-[#7fe0ff]">
+                                                    Ready
+                                                </span>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </>
                             ) : (
                                 <>
-                                    <div className="rounded-[1.35rem] border border-stone-200/80 bg-stone-50 p-4 dark:border-slate-700/80 dark:bg-[#0d172b]">
+                                    <div className={`rounded-[1.35rem] border border-white/[0.06] bg-[#0b1526]/70 p-4`}>
                                         <div className="mb-3 flex items-center justify-between">
-                                            <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                Session Setup
-                                            </h4>
-                                            <span className="rounded-full border border-stone-200 bg-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-stone-600 dark:border-slate-700 dark:bg-[#111d33] dark:text-slate-300">
+                                            <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-[#91A8C3]">Session Setup</h4>
+                                            <span className="rounded-full border border-white/10 bg-white/[0.02] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#91A8C3]">
                                                 Shared
                                             </span>
                                         </div>
                                         <div className="space-y-3">
                                             <label className="space-y-1.5">
-                                                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                    Mode
-                                                </span>
+                                                <span className={eyebrow}>Mode</span>
                                                 <select
                                                     value={session.mode}
                                                     onChange={(event) => handleSessionUpdate({ mode: event.target.value })}
-                                                    className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                                    className={glassInput}
                                                 >
                                                     {SESSION_MODE_OPTIONS.map((option) => (
-                                                        <option key={option.value} value={option.value}>
+                                                        <option key={option.value} value={option.value} className="bg-[#0b1526]">
                                                             {option.label}
                                                         </option>
                                                     ))}
                                                 </select>
                                             </label>
-                                            <p className="rounded-xl border border-stone-200 bg-white/80 px-3 py-2 text-xs leading-6 text-stone-600 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+                                            <p className="rounded-xl border border-white/[0.06] bg-white/[0.015] px-3 py-2 text-xs leading-6 text-[#91A8C3]">
                                                 {SESSION_MODE_HELP[session.mode] || SESSION_MODE_HELP.peer_practice}
                                             </p>
                                             <div className="grid gap-2 sm:grid-cols-2">
                                                 <button
                                                     type="button"
                                                     onClick={() => handleToggleSessionClaim('driverSocketId')}
-                                                    className={`rounded-xl border px-3 py-2 text-sm font-medium transition ${
+                                                    className={`rounded-xl border px-3 py-2 text-sm font-medium transition-all duration-200 ${
                                                         session.driverSocketId === currentSocketId
-                                                            ? 'border-blue-300 bg-blue-50 text-blue-900 dark:border-blue-700 dark:bg-blue-950/30 dark:text-blue-100'
-                                                            : 'border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-300 hover:text-stone-900 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:text-white'
+                                                            ? 'border-[#00D4FF]/40 bg-[#00D4FF]/[0.08] text-[#c9ecff] shadow-[0_0_16px_-6px_rgba(0,212,255,0.6)]'
+                                                            : 'border-white/[0.06] bg-white/[0.015] text-[#91A8C3] hover:border-white/20 hover:text-[#EAF6FF]'
                                                     }`}
                                                 >
                                                     {session.driverSocketId === currentSocketId ? 'Release Driver' : 'Make me Driver'}
@@ -908,113 +960,135 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                                 <button
                                                     type="button"
                                                     onClick={() => handleToggleSessionClaim('navigatorSocketId')}
-                                                    className={`rounded-xl border px-3 py-2 text-sm font-medium transition ${
+                                                    className={`rounded-xl border px-3 py-2 text-sm font-medium transition-all duration-200 ${
                                                         session.navigatorSocketId === currentSocketId
-                                                            ? 'border-blue-300 bg-blue-50 text-blue-900 dark:border-blue-700 dark:bg-blue-950/30 dark:text-blue-100'
-                                                            : 'border-stone-200 bg-stone-50 text-stone-700 hover:border-stone-300 hover:text-stone-900 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:text-white'
+                                                            ? 'border-[#00D4FF]/40 bg-[#00D4FF]/[0.08] text-[#c9ecff] shadow-[0_0_16px_-6px_rgba(0,212,255,0.6)]'
+                                                            : 'border-white/[0.06] bg-white/[0.015] text-[#91A8C3] hover:border-white/20 hover:text-[#EAF6FF]'
                                                     }`}
                                                 >
                                                     {session.navigatorSocketId === currentSocketId ? 'Release Navigator' : 'Make me Navigator'}
                                                 </button>
                                             </div>
                                             <div className="grid gap-2 sm:grid-cols-2">
-                                                <div className="rounded-xl border border-stone-200 bg-stone-50/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
-                                                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">Driver</p>
-                                                    <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{driver?.username || 'Unassigned'}</p>
+                                                <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                                                    <p className={eyebrow}>Driver</p>
+                                                    <p className="mt-1 text-sm font-medium text-[#EAF6FF]">{driver?.username || 'Unassigned'}</p>
                                                 </div>
-                                                <div className="rounded-xl border border-stone-200 bg-stone-50/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
-                                                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">Navigator</p>
-                                                    <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{navigatorUser?.username || 'Unassigned'}</p>
+                                                <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                                                    <p className={eyebrow}>Navigator</p>
+                                                    <p className="mt-1 text-sm font-medium text-[#EAF6FF]">{navigatorUser?.username || 'Unassigned'}</p>
                                                 </div>
                                             </div>
                                             <div className="grid gap-2 sm:grid-cols-2">
-                                                <div className="rounded-xl border border-stone-200 bg-stone-50/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
-                                                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">Your Session Role</p>
-                                                    <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{participationLabel}</p>
+                                                <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                                                    <p className={eyebrow}>Your Session Role</p>
+                                                    <p className="mt-1 text-sm font-medium text-[#EAF6FF]">{participationLabel}</p>
                                                 </div>
-                                                <div className="rounded-xl border border-stone-200 bg-stone-50/90 p-3 dark:border-slate-700 dark:bg-slate-900/50">
-                                                    <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">Editor Access</p>
-                                                    <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{editorUnlocked ? 'Editor control' : 'Read only'}</p>
+                                                <div className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-3">
+                                                    <p className={eyebrow}>Editor Access</p>
+                                                    <p className="mt-1 text-sm font-medium text-[#EAF6FF]">{editorUnlocked ? 'Editor control' : 'Read only'}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    {importNotice && (
-                                        <div className="rounded-xl border border-amber-200 bg-amber-50/90 p-3 text-sm leading-6 text-amber-900 shadow-sm dark:border-amber-800/60 dark:bg-amber-950/30 dark:text-amber-100">
-                                            {importNotice}
-                                        </div>
-                                    )}
+                                    <AnimatePresence>
+                                        {importNotice && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -6 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -6 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="rounded-xl border border-[#00D4FF]/25 bg-[#00D4FF]/[0.06] p-3 text-sm leading-6 text-[#c9ecff] shadow-sm"
+                                            >
+                                                {importNotice}
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                     <button
                                         type="button"
                                         onClick={() => setShowImportModal(true)}
-                                        className="inline-flex w-full items-center justify-center rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-300 hover:bg-white hover:text-stone-900 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200 dark:hover:border-gray-600 dark:hover:text-white"
+                                        className="inline-flex w-full items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.015] px-3 py-2 text-sm font-medium text-[#c3d6ea] transition-all duration-200 hover:border-[#00D4FF]/35 hover:text-[#EAF6FF]"
                                     >
                                         Import Problem
                                     </button>
-                                    <div className="rounded-[1.35rem] border border-stone-200/80 bg-stone-50 p-4 dark:border-slate-700/80 dark:bg-[#0d172b]">
+                                    <div className={`rounded-[1.35rem] border border-white/[0.06] bg-[#0b1526]/70 p-4`}>
                                         <div className="mb-3 flex items-center justify-between">
-                                            <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400">
-                                                Shared Approach Board
-                                            </h4>
-                                            <span className="text-[10px] text-gray-400">Use this before coding</span>
+                                            <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-[#91A8C3]">Shared Approach Board</h4>
+                                            <span className="text-[10px] text-[#6f88a8]">Use this before coding</span>
                                         </div>
                                         <textarea
                                             value={session.approachNotes || ''}
                                             onChange={handleApproachNotesChange}
                                             placeholder="Idea, brute force, optimized approach, edge cases..."
-                                            className="min-h-[120px] w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-amber-400 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+                                            className={`min-h-[120px] ${glassInput}`}
                                         />
                                     </div>
-                                    {canSeePrivateNotes && (
-                                        <div className="rounded-[1.35rem] border border-purple-200 bg-purple-50/40 p-4 dark:border-purple-800/40 dark:bg-purple-950/15">
-                                            <div className="mb-3 flex items-center justify-between">
-                                                <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-purple-700 dark:text-purple-300">
-                                                    {isMockMode ? 'Private Interviewer Notes' : 'Private Mentor Notes'}
-                                                </h4>
-                                                <span className="text-[10px] text-purple-400">Visible only to you</span>
-                                            </div>
-                                            <textarea
-                                                value={session.mentorNotes || ''}
-                                                onChange={handleMentorNotesChange}
-                                                placeholder="Confusion points, next topic, score/rubric..."
-                                                className="min-h-[120px] w-full rounded-xl border border-purple-100 bg-white px-3 py-2 text-sm text-stone-900 outline-none transition focus:border-purple-400 dark:border-purple-800/50 dark:bg-slate-900 dark:text-white"
-                                            />
-                                        </div>
-                                    )}
-                                    {isMockMode && session.mockSummary && (
-                                        <div className="rounded-[1.35rem] border border-amber-200 bg-amber-50/70 p-4 dark:border-amber-800/40 dark:bg-amber-950/20">
-                                            <div className="mb-3 flex items-center justify-between">
-                                                <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-amber-700 dark:text-amber-300">Mock Summary</h4>
-                                                {session.mockSummary.shareId ? (
-                                                    <button
-                                                        type="button"
-                                                        onClick={async () => {
-                                                            await navigator.clipboard.writeText(`${window.location.origin}/summary/${session.mockSummary.shareId}`);
-                                                            toast.success('Mock summary link copied');
-                                                        }}
-                                                        className="rounded-full border border-amber-200 bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-700 dark:border-amber-800/40 dark:bg-slate-900/60 dark:text-amber-200"
-                                                    >
-                                                        Share
-                                                    </button>
-                                                ) : null}
-                                            </div>
-                                            <div className="grid gap-3 sm:grid-cols-2">
-                                                <div className="rounded-xl bg-white/80 p-3 dark:bg-slate-900/50">
-                                                    <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">Problem</p>
-                                                    <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{session.mockSummary.problemTitle}</p>
+                                    <AnimatePresence>
+                                        {canSeePrivateNotes && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 6 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 6 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="rounded-[1.35rem] border border-[#7C5CFF]/25 bg-[#7C5CFF]/[0.05] p-4"
+                                            >
+                                                <div className="mb-3 flex items-center justify-between">
+                                                    <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-[#c9b9ff]">
+                                                        {isMockMode ? 'Private Interviewer Notes' : 'Private Mentor Notes'}
+                                                    </h4>
+                                                    <span className="text-[10px] text-[#a48cff]">Visible only to you</span>
                                                 </div>
-                                                <div className="rounded-xl bg-white/80 p-3 dark:bg-slate-900/50">
-                                                    <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">Latest Run</p>
-                                                    <p className="mt-1 text-sm font-medium text-gray-900 dark:text-white">{session.mockSummary.latestRunStatus}</p>
+                                                <textarea
+                                                    value={session.mentorNotes || ''}
+                                                    onChange={handleMentorNotesChange}
+                                                    placeholder="Confusion points, next topic, score/rubric..."
+                                                    className="min-h-[120px] w-full rounded-xl border border-[#7C5CFF]/25 bg-[#0b1526]/80 px-3 py-2 text-sm text-[#EAF6FF] outline-none transition-all duration-200 placeholder:text-[#5a5480] focus:border-[#7C5CFF]/60 focus:shadow-[0_0_0_3px_rgba(124,92,255,0.14)]"
+                                                />
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                    <AnimatePresence>
+                                        {isMockMode && session.mockSummary && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 6 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 6 }}
+                                                transition={{ duration: 0.18 }}
+                                                className="rounded-[1.35rem] border border-[#00D4FF]/25 bg-[#00D4FF]/[0.05] p-4"
+                                            >
+                                                <div className="mb-3 flex items-center justify-between">
+                                                    <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-[#7fe0ff]">Mock Summary</h4>
+                                                    {session.mockSummary.shareId ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={async () => {
+                                                                await navigator.clipboard.writeText(`${window.location.origin}/summary/${session.mockSummary.shareId}`);
+                                                                toast.success('Mock summary link copied');
+                                                            }}
+                                                            className="rounded-full border border-[#00D4FF]/25 bg-white/[0.03] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#7fe0ff] transition-colors duration-200 hover:border-[#00D4FF]/50"
+                                                        >
+                                                            Share
+                                                        </button>
+                                                    ) : null}
                                                 </div>
-                                            </div>
-                                        </div>
-                                    )}
-                                    <div className="rounded-[1.35rem] border border-teal-200/80 bg-teal-50/50 p-4 dark:border-teal-800/40 dark:bg-teal-950/20">
-                                        <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-teal-800 dark:text-teal-200">
+                                                <div className="grid gap-3 sm:grid-cols-2">
+                                                    <div className="rounded-xl bg-white/[0.03] p-3">
+                                                        <p className="text-[10px] uppercase tracking-[0.18em] text-[#6f88a8]">Problem</p>
+                                                        <p className="mt-1 text-sm font-medium text-[#EAF6FF]">{session.mockSummary.problemTitle}</p>
+                                                    </div>
+                                                    <div className="rounded-xl bg-white/[0.03] p-3">
+                                                        <p className="text-[10px] uppercase tracking-[0.18em] text-[#6f88a8]">Latest Run</p>
+                                                        <p className="mt-1 text-sm font-medium text-[#EAF6FF]">{session.mockSummary.latestRunStatus}</p>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                    <div className="rounded-[1.35rem] border border-[#00F5FF]/20 bg-[#00F5FF]/[0.04] p-4">
+                                        <h4 className="text-sm font-semibold uppercase tracking-[0.16em] text-[#8ff2f2]">
                                             Session Intelligence
                                         </h4>
-                                        <p className="mt-2 text-xs leading-5 text-teal-900/90 dark:text-teal-100/80">
+                                        <p className="mt-2 text-xs leading-5 text-[#a9d9d9]">
                                             Mark the end of this practice block for logging, then generate a shareable report from the workspace panel.
                                         </p>
                                         <button
@@ -1026,7 +1100,7 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                                                 });
                                                 toast.success('Session marked as ended for intelligence logs.');
                                             }}
-                                            className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-teal-300 bg-white px-3 py-2 text-sm font-medium text-teal-900 transition hover:bg-teal-50 dark:border-teal-700 dark:bg-slate-900 dark:text-teal-100 dark:hover:bg-teal-950/40"
+                                            className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-[#00F5FF]/25 bg-white/[0.02] px-3 py-2 text-sm font-medium text-[#c9f7f7] transition-all duration-200 hover:border-[#00F5FF]/45 hover:shadow-[0_0_18px_-6px_rgba(0,245,255,0.4)]"
                                         >
                                             End Session
                                         </button>
@@ -1036,26 +1110,25 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                         </div>
                     </div>
 
+                    {/* Room members */}
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
-                                Room Members
-                            </h2>
-                            <div className="flex items-center gap-1.5 rounded-full bg-stone-100 dark:bg-gray-800 px-2.5 py-1">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{users.length}</span>
+                            <h2 className="text-lg font-semibold tracking-tight text-[#EAF6FF]">Room Members</h2>
+                            <div className="flex items-center gap-1.5 rounded-full border border-white/[0.06] bg-white/[0.03] px-2.5 py-1">
+                                <div className="h-2 w-2 rounded-full bg-[#00D4FF] shadow-[0_0_6px_rgba(0,212,255,0.9)]" />
+                                <span className="text-xs font-medium text-[#91A8C3]">{users.length}</span>
                             </div>
                         </div>
-                        <div className="h-px bg-gradient-to-r from-gray-200 dark:from-gray-700 via-gray-200/50 dark:via-gray-700/50 to-transparent"></div>
+                        <div className="h-px bg-gradient-to-r from-[rgba(0,212,255,0.25)] via-white/[0.06] to-transparent" />
                     </div>
 
                     <div>
                         {users.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-12 text-center">
-                                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
-                                    <div className="h-3 w-3 animate-pulse rounded-full bg-gray-400 dark:bg-gray-600"></div>
+                                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03]">
+                                    <div className="h-3 w-3 animate-pulse rounded-full bg-[#00D4FF]" />
                                 </div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Loading room members...</p>
+                                <p className="text-sm text-[#6f88a8]">Loading room members...</p>
                             </div>
                         ) : (
                             <div className="space-y-1">
@@ -1081,55 +1154,54 @@ function Sidebar({ users = [], roomId, roomState, socketRef, currentSocketId, cu
                     </div>
                 </div>
             </div>
-            
-            <div className="flex-shrink-0 border-t border-stone-200/80 bg-white px-4 py-3 dark:border-slate-700/80 dark:bg-[#081121]">
+
+            {/* Quick actions / account footer */}
+            <div className="relative flex-shrink-0 border-t border-[rgba(0,212,255,0.1)] bg-[#0b1526]/80 px-4 py-3 backdrop-blur-xl">
+                <div className="pointer-events-none absolute inset-x-4 top-0 h-px bg-gradient-to-r from-transparent via-[#00D4FF]/35 to-transparent" />
                 <div className="mb-3 text-center">
                     <Link
                         to="/history/reports"
-                        className="text-xs font-semibold uppercase tracking-[0.14em] text-amber-700 underline-offset-4 hover:underline dark:text-amber-300"
+                        className="text-xs font-semibold uppercase tracking-[0.14em] text-[#00D4FF] underline-offset-4 transition-colors duration-200 hover:text-[#7fe0ff] hover:underline"
                     >
                         History → Analysis Reports
                     </Link>
                 </div>
-                <div className="mx-auto flex w-fit items-center justify-center gap-1 rounded-lg border border-white/10 bg-white/5 p-1">
+                <div className="mx-auto flex w-fit items-center justify-center gap-1 rounded-xl border border-[rgba(0,212,255,0.14)] bg-white/[0.02] p-1">
                     <button
                         onClick={() => setActiveTab('session')}
-                        className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 border border-gray-200/80 dark:border-gray-600/80 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm"
+                        className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-[#91A8C3] transition-all duration-200 hover:border-[#00D4FF]/35 hover:bg-white/[0.03] hover:text-[#EAF6FF] hover:shadow-[0_0_14px_-5px_rgba(0,212,255,0.6)]"
                         aria-label="Session settings"
                         title="Session settings"
                     >
-                        <svg className="h-4 w-4 text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <svg className="h-4 w-4 transition-transform duration-200 group-hover:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                             <path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
                             <circle cx="12" cy="12" r="3" />
                         </svg>
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/5 dark:from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                     </button>
-                    
+
                     <button
                         onClick={handleGoHome}
-                        className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 border border-gray-200/80 dark:border-gray-600/80 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm"
+                        className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-[#91A8C3] transition-all duration-200 hover:border-[#00D4FF]/35 hover:bg-white/[0.03] hover:text-[#EAF6FF] hover:shadow-[0_0_14px_-5px_rgba(0,212,255,0.6)]"
                         aria-label="Home"
                         title="Home"
                     >
-                        <svg className="h-4 w-4 text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                        <svg className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                             <polyline points="9,22 9,12 15,12 15,22"/>
                         </svg>
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/5 dark:from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                     </button>
-                    
+
                     <Link to="/">
                         <button
-                            className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-50/90 dark:bg-red-950/90 hover:bg-red-100 dark:hover:bg-red-900 border border-red-200/80 dark:border-red-800/80 hover:border-red-300 dark:hover:border-red-700 transition-all duration-200 shadow-sm hover:shadow-md backdrop-blur-sm"
+                            className="group relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-transparent text-rose-400/80 transition-all duration-200 hover:border-rose-400/35 hover:bg-rose-500/[0.08] hover:text-rose-300 hover:shadow-[0_0_14px_-5px_rgba(244,63,94,0.5)]"
                             aria-label="Leave room"
                             title="Leave room"
                         >
-                            <svg className="h-4 w-4 text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+                            <svg className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                                 <polyline points="16,17 21,12 16,7"/>
                                 <line x1="21" x2="9" y1="12" y2="12"/>
                             </svg>
-                            <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-red-500/10 dark:from-red-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                         </button>
                     </Link>
                 </div>

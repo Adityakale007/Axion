@@ -20,9 +20,9 @@ app.use(
     origin: [
       "http://localhost:5173", // Local development
       "http://localhost:5000", // Alternative local port
-      "https://ForkSpace.studio", // Production domain
-      "https://www.ForkSpace.studio", // Production with www
-      "https://ForkSpace.vercel.app", // Vercel preview deployments
+      "https://Axion.studio", // Production domain
+      "https://www.Axion.studio", // Production with www
+      "https://Axion.vercel.app", // Vercel preview deployments
     ],
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

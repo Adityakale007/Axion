@@ -1,5 +1,5 @@
-const AUTH_TOKEN_KEY = 'forkspace_auth_token';
-const AUTH_CHANGE_EVENT = 'forkspace-auth-change';
+const AUTH_TOKEN_KEY = 'Axion_auth_token';
+const AUTH_CHANGE_EVENT = 'Axion-auth-change';
 
 function notifyAuthChange() {
     window.dispatchEvent(new CustomEvent(AUTH_CHANGE_EVENT));

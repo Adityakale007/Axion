@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   avatarId: { type: String, default: "clever-fox" },
-  forkspaceRating: { type: Number, default: 1000 },
+  AxionRating: { type: Number, default: 1000 },
   totalSessions: { type: Number, default: 0 },
   problemsAttempted: { type: Number, default: 0 },
   currentStreak: { type: Number, default: 0 },

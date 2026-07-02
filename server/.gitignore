@@ -1,0 +1,41 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE/editor folders
+.vscode/
+.idea/
+*.swp
+
+# Docker stuff (optional)
+.dockerignore
+client.Dockerfile
+server.Dockerfile
+docker-compose.yml
+
+# Coverage reports
+coverage/
+
+# Persistent state (local only)
+server/data/*.json
+
+# Misc
+*.log
+*.tgz

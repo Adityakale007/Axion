@@ -1,136 +1,234 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 function supportsTouch() {
-    return typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  return (
+    typeof window !== "undefined" &&
+    ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+  );
 }
 
 function prefersReducedMotion() {
-    return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
 export default function CustomCursor() {
-    const [enabled, setEnabled] = useState(false);
-    const [reducedMotion, setReducedMotion] = useState(false);
-    const [mouseX, setMouseX] = useState(0);
-    const [mouseY, setMouseY] = useState(0);
-    const [ringX, setRingX] = useState(0);
-    const [ringY, setRingY] = useState(0);
-    const [hoverState, setHoverState] = useState({
-        isHoveringButton: false,
-        isHoveringEditor: false,
-        isHoveringCard: false,
+  const [enabled, setEnabled] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [hoverButton, setHoverButton] = useState(false);
+  const [hoverEditor, setHoverEditor] = useState(false);
+
+  const ringRef = useRef({ x: 0, y: 0 });
+  const animationRef = useRef(null);
+
+  const [ringPos, setRingPos] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    setEnabled(!supportsTouch());
+
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mq.matches);
+
+    const handleChange = (e) => setReducedMotion(e.matches);
+
+    if (mq.addEventListener) {
+      mq.addEventListener("change", handleChange);
+    } else {
+      mq.addListener(handleChange);
+    }
+
+    return () => {
+      if (mq.removeEventListener) {
+        mq.removeEventListener("change", handleChange);
+      } else {
+        mq.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
+
+    const handleMove = (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+
+      setMouse({ x, y });
+
+      // Show cursor only after first movement
+      if (!visible) {
+        setVisible(true);
+        ringRef.current = { x, y };
+        setRingPos({ x, y });
+      }
+
+      const target =
+        e.target instanceof Element ? e.target : null;
+
+      setHoverButton(
+        !!target?.closest(
+          "button, a, [role='button'], input[type='submit']"
+        )
+      );
+
+      setHoverEditor(
+        !!target?.closest(
+          ".monaco-editor, pre, code, textarea, [data-cursor='editor']"
+        )
+      );
+    };
+
+    const handleLeave = () => setVisible(false);
+    const handleEnter = () => setVisible(true);
+
+    window.addEventListener("mousemove", handleMove, {
+      passive: true,
     });
 
-    const mouseTargetRef = useRef({ x: 0, y: 0 });
-    const ringRef = useRef({ x: 0, y: 0 });
-    const rafRef = useRef(null);
+    document.addEventListener("mouseleave", handleLeave);
+    document.addEventListener("mouseenter", handleEnter);
 
-    useEffect(() => {
-        if (typeof window === 'undefined') return undefined;
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseleave", handleLeave);
+      document.removeEventListener("mouseenter", handleEnter);
+    };
+  }, [enabled, visible]);
 
-        const nextReduced = prefersReducedMotion();
-        setReducedMotion(nextReduced);
-        setEnabled(!supportsTouch());
+  useEffect(() => {
+    if (!enabled || reducedMotion || !visible) return;
 
-        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-        const handleMotionChange = (event) => setReducedMotion(event.matches);
+    const animate = () => {
+      ringRef.current.x +=
+        (mouse.x - ringRef.current.x) * 0.35;
 
-        if (mediaQuery.addEventListener) {
-            mediaQuery.addEventListener('change', handleMotionChange);
-        } else {
-            mediaQuery.addListener(handleMotionChange);
-        }
+      ringRef.current.y +=
+        (mouse.y - ringRef.current.y) * 0.35;
 
-        return () => {
-            if (mediaQuery.removeEventListener) {
-                mediaQuery.removeEventListener('change', handleMotionChange);
-            } else {
-                mediaQuery.removeListener(handleMotionChange);
-            }
-        };
-    }, []);
+      setRingPos({
+        x: ringRef.current.x,
+        y: ringRef.current.y,
+      });
 
-    useEffect(() => {
-        if (!enabled) return undefined;
+      animationRef.current =
+        requestAnimationFrame(animate);
+    };
 
-        const handleMouseMove = (event) => {
-            const x = event.clientX;
-            const y = event.clientY;
-            mouseTargetRef.current = { x, y };
-            setMouseX(x);
-            setMouseY(y);
+    animationRef.current =
+      requestAnimationFrame(animate);
 
-            const target = event.target instanceof Element ? event.target : null;
-            setHoverState({
-                isHoveringButton: Boolean(target?.closest('[data-cursor="button"], button, a, [role="button"]')),
-                isHoveringEditor: Boolean(target?.closest('[data-cursor="editor"]')),
-                isHoveringCard: Boolean(target?.closest('[data-cursor="card"]')),
-            });
-        };
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [enabled, reducedMotion, visible, mouse]);
 
-        window.addEventListener('mousemove', handleMouseMove, { passive: true });
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [enabled]);
+  if (!enabled || !visible) return null;
 
-    useEffect(() => {
-        if (!enabled || reducedMotion) return undefined;
+  const accent = hoverEditor ? "#00ff88" : "#00e5ff";
+  const ringSize = hoverButton ? 42 : 28;
 
-        const animate = () => {
-            ringRef.current.x += (mouseTargetRef.current.x - ringRef.current.x) * 0.12;
-            ringRef.current.y += (mouseTargetRef.current.y - ringRef.current.y) * 0.12;
-            setRingX(ringRef.current.x);
-            setRingY(ringRef.current.y);
-            rafRef.current = window.requestAnimationFrame(animate);
-        };
+  return (
+    <>
+      {/* Neon Glow */}
+      {!reducedMotion && (
+        <div
+          className="pointer-events-none fixed left-0 top-0 z-[9997]"
+          style={{
+            width: `${ringSize + 20}px`,
+            height: `${ringSize + 20}px`,
+            borderRadius: "9999px",
+            transform: `translate3d(
+              ${ringPos.x - (ringSize + 20) / 2}px,
+              ${ringPos.y - (ringSize + 20) / 2}px,
+              0
+            )`,
+            background: `radial-gradient(
+              circle,
+              ${accent}66 0%,
+              ${accent}22 40%,
+              transparent 75%
+            )`,
+            filter: "blur(14px)",
+            willChange: "transform",
+          }}
+        />
+      )}
 
-        rafRef.current = window.requestAnimationFrame(animate);
-        return () => {
-            if (rafRef.current) window.cancelAnimationFrame(rafRef.current);
-        };
-    }, [enabled, reducedMotion]);
+      {/* Neon Ring */}
+      <div
+        className="pointer-events-none fixed left-0 top-0 z-[9998]"
+        style={{
+          width: `${ringSize}px`,
+          height: `${ringSize}px`,
+          borderRadius: "9999px",
+          border: `1.5px solid ${accent}`,
+          transform: `translate3d(
+            ${ringPos.x - ringSize / 2}px,
+            ${ringPos.y - ringSize / 2}px,
+            0
+          )`,
+          boxShadow: `
+            0 0 6px ${accent},
+            0 0 14px ${accent},
+            0 0 30px ${accent}99
+          `,
+          transition:
+            "width 180ms ease, height 180ms ease, border-color 180ms ease",
+          willChange: "transform",
+        }}
+      />
 
-    useEffect(() => {
-        if (!enabled || !reducedMotion) return;
-        setRingX(mouseX);
-        setRingY(mouseY);
-    }, [enabled, reducedMotion, mouseX, mouseY]);
+      {/* Crosshair Horizontal */}
+      <div
+        className="pointer-events-none fixed left-0 top-0 z-[9999]"
+        style={{
+          width: "14px",
+          height: "1px",
+          background: accent,
+          transform: `translate3d(${mouse.x - 7}px, ${mouse.y}px, 0)`,
+          boxShadow: `0 0 8px ${accent}`,
+        }}
+      />
 
-    if (!enabled) return null;
+      {/* Crosshair Vertical */}
+      <div
+        className="pointer-events-none fixed left-0 top-0 z-[9999]"
+        style={{
+          width: "1px",
+          height: "14px",
+          background: accent,
+          transform: `translate3d(${mouse.x}px, ${mouse.y - 7}px, 0)`,
+          boxShadow: `0 0 8px ${accent}`,
+        }}
+      />
 
-    const ringSize = hoverState.isHoveringButton ? 36 : hoverState.isHoveringCard ? 20 : 24;
-    const ringOpacity = hoverState.isHoveringButton ? 1 : hoverState.isHoveringCard ? 0.4 : 0.6;
-    const ringColor = hoverState.isHoveringEditor ? '#10b981' : '#f59e0b';
-
-    return (
-        <>
-            {!reducedMotion ? (
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none fixed left-0 top-0 z-[9999]"
-                    style={{
-                        width: `${ringSize}px`,
-                        height: `${ringSize}px`,
-                        borderRadius: '9999px',
-                        border: `1.5px solid ${ringColor}`,
-                        opacity: ringOpacity,
-                        transform: `translate3d(${ringX - ringSize / 2}px, ${ringY - ringSize / 2}px, 0)`,
-                        transition: 'width 200ms ease, height 200ms ease, opacity 200ms ease, border-color 200ms ease',
-                        willChange: 'transform, width, height, opacity',
-                    }}
-                />
-            ) : null}
-            <div
-                aria-hidden="true"
-                className="pointer-events-none fixed left-0 top-0 z-[9999]"
-                style={{
-                    width: '4px',
-                    height: '4px',
-                    borderRadius: '9999px',
-                    background: hoverState.isHoveringEditor ? '#10b981' : 'var(--cursor-color, #f59e0b)',
-                    transform: `translate3d(${mouseX - 2}px, ${mouseY - 2}px, 0)`,
-                        willChange: 'transform',
-                }}
-            />
-        </>
-    );
+      {/* Center Dot */}
+      <div
+        className="pointer-events-none fixed left-0 top-0 z-[10000]"
+        style={{
+          width: "6px",
+          height: "6px",
+          borderRadius: "9999px",
+          background: accent,
+          transform: `translate3d(${mouse.x - 3}px, ${mouse.y - 3}px, 0)`,
+          boxShadow: `
+            0 0 5px ${accent},
+            0 0 10px ${accent},
+            0 0 20px ${accent},
+            0 0 40px ${accent}
+          `,
+          willChange: "transform",
+        }}
+      />
+    </>
+  );
 }

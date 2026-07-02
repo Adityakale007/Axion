@@ -68,7 +68,7 @@ function SessionReportPage() {
                     <div className="space-y-6">
                         <div className="text-center sm:text-left">
                             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-500 dark:text-gray-400">
-                                ForkSpace · Session intelligence
+                                Axion · Session intelligence
                             </p>
                             <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
                                 Shared report
@@ -86,7 +86,7 @@ function SessionReportPage() {
                             />
                         </div>
                         <p className="text-center text-[11px] text-gray-500 dark:text-gray-500">
-                            ForkSpace session report · ID {shareId}
+                            Axion session report · ID {shareId}
                         </p>
                     </div>
                 )}
