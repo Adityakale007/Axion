@@ -8,8 +8,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const PLATFORM_OPTIONS = [
     { value: 'codeforces', label: 'Codeforces' },
-    { value: 'custom', label: 'Custom / Other' },
-    { value: 'leetcode', label: 'LeetCode (discussion)' },
+    { value: 'custom', label: 'Custom' },
+    { value: 'leetcode', label: 'LeetCode' },
     { value: 'atcoder', label: 'AtCoder' },
     { value: 'other', label: 'Other' },
 ];

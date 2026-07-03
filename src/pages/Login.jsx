@@ -33,24 +33,28 @@ const useCases = [
     {
         icon: Sword,
         title: 'Mock Interview',
-        description: 'Candidate and interviewer stay in one room with a shared editor, shared runs, and clear Driver/Navigator structure.',
+        description:
+            'Candidates and interviewers convene within a shared workspace featuring a live editor, synchronized execution, and a well-defined Driver/Navigator paradigm.',
     },
     {
         icon: GraduationCap,
         title: 'DSA Mentoring',
-        description: 'Bring in a Codeforces-style problem, talk through the approach, and debug together without handing the screen back and forth.',
+        description:
+            'Introduce a Codeforces-style problem, deliberate on algorithmic strategies, and troubleshoot collaboratively without the inefficiencies of repeated screen handovers.',
     },
     {
         icon: Zap,
         title: 'Peer Practice',
-        description: 'Pick one problem, build one solution together, then pressure-test it with samples, hidden tests, and fast shared feedback.',
+        description:
+            'Co-author a unified solution, subject it to canonical and adversarial test cases, and iterate rapidly through immediate, shared feedback loops.',
     },
 ];
 
 const quickStartSteps = [
-    'Create a room or paste a Room ID. Start as a guest if you just want to get moving.',
-    'Choose the session mode, load the problem, and assign Driver or Navigator roles only if that structure helps the session.',
-    'Code together, run samples, generate hidden tests, then open Analyze or Report when you want a sharper post-run review.',
+    'Provision a collaborative workspace or attach to an existing Room ID, with guest access enabling immediate participation without introducing unnecessary onboarding overhead.',
+    'Configure the session modality, contextualize the problem domain, and formalize Driver or Navigator responsibilities wherever structured collaboration improves efficiency.',
+    'Iteratively architect the solution, validate representative behaviours, and synthesize adversarial inputs designed to expose latent implementation defects and algorithmic fragilities.',
+    'Interrogate the resulting artefacts through complexity diagnostics, implementation analyses, and archival reports intended to preserve valuable retrospective insights.',
 ];
 
 const featureHighlights = [
@@ -58,37 +62,37 @@ const featureHighlights = [
         icon: Workflow,
         title: "Everything. One Place.",
         description:
-            "Problem, editor, teammates, test runs, and AI—all inside a single workspace built for uninterrupted coding.",
+            "Problem statement, editor, collaborators, execution logs, and AI assistance converge within a unified workspace engineered for uninterrupted flow.",
     },
     {
         icon: Radar,
-        title: "Smart Problem Import",
+        title: "Intelligent Problem Ingestion",
         description:
-            "Pull challenges from Codeforces, customize the brief, and make every practice session your own.",
+            "Import challenges directly from Codeforces, refine the problem context, and curate sessions tailored to your objectives.",
     },
     {
         icon: FlaskConical,
-        title: "Beyond Sample Tests",
+        title: "Beyond Canonical Test Cases",
         description:
-            "Generate hidden edge cases, catch tricky bugs, and stress-test solutions before they fail in the wild.",
+            "Synthesize adversarial inputs, expose latent defects, and rigorously validate solutions before they encounter production-grade edge cases.",
     },
     {
         icon: BrainCircuit,
-        title: "AI That Actually Coaches",
+        title: "AI That Operates as a Mentor",
         description:
-            "Get instant code reviews, performance insights, and personalized feedback that helps you improve—not just debug.",
+            "Receive immediate code critiques, complexity analyses, and individualized guidance designed to cultivate deeper engineering intuition.",
     },
     {
         icon: Users2,
-        title: "Practice Together",
+        title: "Collaborative Deliberate Practice",
         description:
-            "Switch between Peer Practice, Mock Interviews, and Mentoring with collaborative rooms designed for real growth.",
+            "Transition seamlessly between Peer Practice, Mock Interviews, and Mentorship sessions within purpose-built collaborative environments.",
     },
     {
         icon: ShieldCheck,
-        title: "Join in Seconds",
+        title: "Instantaneous Onboarding",
         description:
-            "No account? No problem. Jump into a room instantly, then save your progress whenever you're ready.",
+            "Enter a room within seconds through guest access, then persist your progress whenever long-term continuity becomes desirable.",
     },
 ];
 
@@ -462,8 +466,8 @@ function Login() {
 
                         <div className="mt-8 space-y-5">
                             <AnimatedHeadline
-                                text="One shared room for serious DSA practice, mock interviews, and mentoring."
-                                gradientWords={['shared', 'dsa', 'mock', 'mentoring.']}
+                                text="A unified workspace for deliberate DSA practice, mock interviews, and collaborative mentorship."
+                                gradientWords={['unified', 'dsa', 'mock', 'mentorship.']}
                             />
                             <p className="mx-auto max-w-3xl text-lg leading-8 text-slate-400">
                                 Axion keeps the problem brief, shared editor, sample runs, hidden tests, solution analysis, and session reporting in one focused workflow.
@@ -567,15 +571,23 @@ function Login() {
                         <div className="mt-6 grid w-full max-w-3xl gap-3 text-left sm:grid-cols-3">
                             <div data-cursor="card" className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-cyan-400/25">
                                 <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-400/80">Shared Room</p>
-                                <p className="mt-1 text-sm text-slate-400">Live editor sync, presence, room roles, and one source of truth for the whole session.</p>
+                                <p className="mt-1 text-sm text-slate-400">Real-time editor synchronization, persistent presence indicators, well-defined collaboration roles, and a unified source of truth for every stage of the session.</p>
                             </div>
-                            <div data-cursor="card" className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-cyan-400/25">
-                                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-400/80">Runs + Hidden Tests</p>
-                                <p className="mt-1 text-sm text-slate-400">Run samples, submit the parsed suite, then generate deeper tests when the obvious cases are no longer enough.</p>
+                            <div
+                                data-cursor="card"
+                                className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-cyan-400/25"
+                            >
+                                <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-400/80">
+                                    Problem Import
+                                </p>
+                                <p className="mt-1 text-sm text-slate-400">
+                                    Ingest challenges directly from Codeforces, contextualize the problem
+                                    statement, and curate sessions aligned with specific objectives.
+                                </p>
                             </div>
                             <div data-cursor="card" className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-cyan-400/25">
                                 <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-400/80">Review + Report</p>
-                                <p className="mt-1 text-sm text-slate-400">Inspect code quality, complexity, and edge-case coverage, then keep a shareable report when it is worth saving.</p>
+                                <p className="mt-1 text-sm text-slate-400">Evaluate implementation quality, computational complexity, and edge-case resilience, then retain a shareable report for sessions that warrant archival.</p>
                             </div>
                         </div>
 
@@ -713,7 +725,7 @@ function Login() {
 
             <footer className="border-t border-white/5 bg-[#05070F] px-4 py-6 text-sm text-slate-500 sm:px-6 lg:px-8">
                 <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 text-center sm:flex-row sm:text-left">
-                    <p className="font-mono tracking-wide">Axion</p>
+                    <p className="font-bold tracking-wide">Axion</p>
                     <div className="flex flex-wrap items-center justify-center gap-4">
                         <a
                             href="https://github.com/Adityakale007"
