@@ -143,7 +143,7 @@ const allowedOrigins = [
       "http://127.0.0.1:5173",
       "http://localhost:5000",
       "http://127.0.0.1:5000",
-      "https://fork-space.vercel.app",
+      "https://axion-workspace.vercel.app",
       ...configuredOrigins,
     ].filter(Boolean),
   ),
