@@ -1,6 +1,8 @@
 <div align="center">
-
-<img src="./public/favicon-dark.png" alt="Axion Logo" width="96" height="96" />
+  <a href="https://axion-workspace.vercel.app">
+    <img src="./public/favicon-dark.png" alt="Axion Logo" width="100" height="100" />
+  </a>
+</div>
 
 # Axion
 
